@@ -1,2 +1,3 @@
 # chargeroids
-An Asteroids-Clone with charged asteroids und simple vectorgraphics
+Ein Asteroids-Clon mit geladenen Asteroiden und simplen Vektorgrafiken.
+Eine genauere Beschreibung befindet sich in der Datei konzept-idee.txt
