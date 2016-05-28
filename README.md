@@ -33,7 +33,11 @@ SDL (Simple DirectMedia Layer)
 
         SDL-Wiki:   http://wiki.libsdl.org/FrontPage
 
-        Tutorials:  http://www.sdltutorials.com/tutorials
+        Tutorials:  
+
+		http://www.sdltutorials.com/tutorials
+
+		http://lazyfoo.net/tutorials/SDL/index.php
 
 OpenGL (Open Graphics Library):
 
