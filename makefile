@@ -4,7 +4,7 @@ DEBUG_DIR     = debug
 RELEASE_DIR   = bin
 
 CC = gcc
-CFLAGS = -Wall -g 
+CFLAGS = -Wall -g -I/usr/include/SDL2
 
 all: sdl_tutorial.cpp
 
