@@ -3,8 +3,8 @@ HEADER_DIR    = inc
 DEBUG_DIR     = debug
 RELEASE_DIR   = bin
 
-CC = gcc
-CFLAGS = -Wall -g -I/usr/include/SDL2
+CC = g++
+CFLAGS = -g -lSDL2 -Wall
 
 all: sdl_tutorial.cpp
 

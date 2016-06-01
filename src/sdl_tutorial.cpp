@@ -1,19 +1,43 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>
-#include <SDL/SDL.h>
+#include <SDL/SDL_video.h>
 
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
 int main(int num_arguments, char* arguments[]) {
 
-  //The window we'll be rendering to
-  SDL_Window* window = NULL;
+	//The window we'll be rendering to
+	SDL_Window* window = NULL;
 
-  //The surface contained by the window
-  SDL_Surface* screenSurface = NULL;
+	//The surface contained by the window
+	SDL_Surface* screenSurface = NULL;
 
-  printf("return value of SDL_Init: %i \n", SDL_Init( SDL_INIT_VIDEO));
+	if(SDL_Init(SDL_INIT_VIDEO) < 0) {
+		printf("SDL could not be initialized. Error: %s", SDL_GetError());
+	}
+	else {
+		//Create window
+		window = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+		if (window == NULL) {
+			printf("Window could not be created. Error: %s", SDL_GetError());
+		}
+		else {
+			//Get window surface:
+			screenSurface = SDL_GetWindowSurface(window);
 
-  return 0;
+			//Fill the surface white
+			SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0xFF, 0xFF, 0xFF));
+
+			//Update the surface
+			SDL_UpdateWindowSurface(window);
+
+			SDL_Delay(2000);
+
+			SDL_DestroyWindow(window);
+			SDL_Quit();
+		}
+
+	}
+	return 0;
 }
