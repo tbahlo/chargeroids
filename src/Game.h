@@ -7,13 +7,19 @@
 
 #ifndef SRC_GAME_H_
 #define SRC_GAME_H_
+#include <SDL2/SDL.h>
 
 class Game {
 public:
 	Game();
 	virtual ~Game();
 
+	/*
+	 * starts the game
+	 */
 	int start();
+
+
 
 private:
 	bool isRunning;
