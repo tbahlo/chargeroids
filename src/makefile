@@ -13,19 +13,13 @@ CFLAGS = -g -lSDL2 -Wall
 
 all: chargeroids
 
-#sdl_tutorial.cpp: 
-#  $(CC) $(CFLAGS) -o sdl_tutorial $(SOURCE_DIR)/$@
-
 chargeroids: main.o Game.o
 	$(CC) $(CFLAGS) -o chargeroids main.o Game.o
 
+# create object files from every cpp file you find:
 %.o: %.cpp %.h
 	$(CC) $(CFLAGS) -c -o $@ $<
+	
+# clean up - delete all earlier compiled files
 clean:
 	rm -f *.o
-
-#main.o: $(SOURCE_DIR)/main.cpp $(SOURCE_DIR)/Game.h
-#	$(CC) $(CFLAGS) -c $(SOURCE_DIR)/main.cpp -o $(DEBUG_DIR)/main.o
-
-#Game.o: $(SOURCE_DIR)/Game.h $(SOURCE_DIR)/Game.cpp
-#	$(CC) $(CFLAGS) -o $(DEBUG_DIR)/Game.o $(SOURCE_DIR)/Game.h $(SOURCE_DIR)/Game.cpp
