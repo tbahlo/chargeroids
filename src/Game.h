@@ -24,6 +24,11 @@ public:
 private:
 	bool isRunning;
 	int initialize();
+	SDL_Window* game_window;
+	SDL_Surface* screen_surface;
+	SDL_Surface* testbild;
+
+
 	void handle_input_events();
 	void update_game_state();
 	void render_current_frame();
