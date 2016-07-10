@@ -22,11 +22,12 @@ public:
 
 
 private:
-	bool isRunning;
+	bool is_Running;
 	int initialize();
 	SDL_Window* game_window;
 	SDL_Surface* screen_surface;
 	SDL_Surface* testbild;
+	SDL_Event input_event;
 
 
 	void handle_input_events();

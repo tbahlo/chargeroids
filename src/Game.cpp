@@ -9,10 +9,11 @@
 #include "SDL2/SDL.h"
 
 Game::Game() {
-	isRunning = true;
+	is_Running = true;
 	game_window = NULL;
 	screen_surface = NULL;
 	testbild = NULL;
+	//input_event = NULL;
 }
 
 Game::~Game() {
@@ -27,22 +28,20 @@ int Game::start(){
 
 	if (!initialize()){
 		printf("Could not initialize => exit \n");
+		SDL_Quit();
+		return 1;
 	}
 	else{
-
-		while (isRunning){
+		while (is_Running){
 			handle_input_events();
 			update_game_state();
 			render_current_frame();
-			SDL_Delay(2000);
-			isRunning = false;
 		}
 
 		clean_up();
 
 		return 0;
 	}
-	return 1;
 }
 
 int Game::initialize(){
@@ -80,6 +79,13 @@ int Game::initialize(){
 }
 
 void Game::handle_input_events(){
+	while (SDL_PollEvent(&input_event) != 0){
+			// User quits with "X"
+			if(input_event.type == SDL_QUIT){
+					is_Running = false;
+		}
+	}
+
 }
 
 void Game::update_game_state(){
