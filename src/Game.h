@@ -28,6 +28,7 @@ private:
 	SDL_Surface* screen_surface;
 	SDL_Surface* testbild;
 	SDL_Event input_event;
+	SDL_Renderer* renderer;
 
 
 	void handle_input_events();
