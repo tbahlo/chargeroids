@@ -8,7 +8,6 @@
 #ifndef SRC_GAME_H_
 #define SRC_GAME_H_
 #include <SDL2/SDL.h>
-
 class Game {
 public:
 	Game();
@@ -19,8 +18,6 @@ public:
 	 */
 	int start();
 
-
-
 private:
 	bool is_Running;
 	int initialize();
@@ -29,7 +26,6 @@ private:
 	SDL_Surface* testbild;
 	SDL_Event input_event;
 	SDL_Renderer* renderer;
-
 
 	void handle_input_events();
 	void update_game_state();

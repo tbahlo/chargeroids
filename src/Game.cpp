@@ -1,10 +1,3 @@
-/*
-* Game.cpp
- *
- *  Created on: 26.06.2016
- *      Author: thore
- */
-
 #include "Game.h"
 #include "SDL2/SDL.h"
 
@@ -23,20 +16,20 @@ Game::~Game() {
 
 
 int Game::start(){
+	//TODO: folgenden Code auf Exceptions statt ERROR codes umschreiben
 	if (!initialize()){
 		printf("Could not initialize => exit \n");
 		SDL_Quit();
 		return 1;
 	}
-	else{
+	else {
+
+
 		while (is_Running){
 			handle_input_events();
 			update_game_state();
 			render_current_frame();
-
-
 		}
-
 		clean_up();
 
 		return 0;
