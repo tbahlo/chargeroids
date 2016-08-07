@@ -8,7 +8,7 @@
 #include "DrawableObject.h"
 #include <SDL2/SDL.h>
 
-DrawableObject::DrawableObject(float x, float y, SDL_Renderer* given_renderer)
+DrawableObject::DrawableObject(double x, double y, SDL_Renderer* given_renderer)
 {
 	x_position = x;
 	y_position = y;
@@ -35,7 +35,7 @@ void DrawableObject::draw_myself()
 	my_body.y = y_position;
 	my_body.w = 10;
 	my_body.h = 10;
-	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF)
+	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 	SDL_RenderFillRect(renderer, &my_body);
 }
 

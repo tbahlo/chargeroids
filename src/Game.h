@@ -8,6 +8,11 @@
 #ifndef SRC_GAME_H_
 #define SRC_GAME_H_
 #include <SDL2/SDL.h>
+#include <list>
+#include "DrawableObject.h"
+using namespace std;
+
+
 class Game {
 public:
 	Game();
@@ -26,6 +31,8 @@ private:
 	SDL_Surface* testbild;
 	SDL_Event input_event;
 	SDL_Renderer* renderer;
+	list<DrawableObject> drawable_objects;
+
 
 	void handle_input_events();
 	void update_game_state();

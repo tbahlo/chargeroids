@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "SDL2/SDL.h"
+#include "DrawableObject.h"
 
 Game::Game() {
 	is_Running = true;
@@ -14,7 +15,6 @@ Game::~Game() {
 	// TODO Auto-generated destructor stub
 }
 
-
 int Game::start(){
 	//TODO: folgenden Code auf Exceptions statt ERROR codes umschreiben
 	if (!initialize()){
@@ -23,7 +23,15 @@ int Game::start(){
 		return 1;
 	}
 	else {
+		DrawableObject* first_test_object;
+		first_test_object = new DrawableObject(renderer);
+		drawable_objects.push_back(*first_test_object);
 
+		DrawableObject* second_test_object = new DrawableObject(250., 250., renderer);
+		drawable_objects.push_back(*second_test_object);
+
+		DrawableObject* third_test_object = new DrawableObject(300., 10., renderer);
+		drawable_objects.push_back(*third_test_object);
 
 		while (is_Running){
 			handle_input_events();
@@ -106,6 +114,18 @@ void Game::handle_input_events(){
 }
 
 void Game::update_game_state(){
+	for (list<DrawableObject>::iterator iter = drawable_objects.begin(); iter != drawable_objects.end(); iter++)
+		{
+			float current_height = iter->get_y();
+			if (current_height <=0)
+				{
+					iter->set_y(500);
+				}
+			else{
+					iter->set_y(current_height - 0.01);
+			}
+		}
+
 }
 
 void Game::render_current_frame(){
@@ -135,6 +155,11 @@ void Game::render_current_frame(){
 	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0x00, 50);
 	SDL_RenderFillRect(renderer, &contourRect);
 
+	// draw all drawable objects:
+	for (list<DrawableObject>::iterator iter = drawable_objects.begin(); iter != drawable_objects.end(); iter++)
+		{
+			iter->draw_myself();
+		}
 
 	//finally render the image!
 	SDL_RenderPresent(renderer);

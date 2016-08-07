@@ -5,7 +5,7 @@
 class DrawableObject
 {
 public:
-	DrawableObject(float x, float y, SDL_Renderer* given_renderer);
+	DrawableObject(double x, double y, SDL_Renderer* given_renderer);
 	DrawableObject(SDL_Renderer* given_renderer);
 	virtual
 	~DrawableObject ();
