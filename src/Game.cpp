@@ -1,12 +1,6 @@
-/*
-* Game.cpp
- *
- *  Created on: 26.06.2016
- *      Author: thore
- */
-
 #include "Game.h"
 #include "SDL2/SDL.h"
+#include "DrawableObject.h"
 
 Game::Game() {
 	is_Running = true;
@@ -21,22 +15,33 @@ Game::~Game() {
 	// TODO Auto-generated destructor stub
 }
 
-
 int Game::start(){
+	//TODO: folgenden Code auf Exceptions statt ERROR codes umschreiben
 	if (!initialize()){
 		printf("Could not initialize => exit \n");
 		SDL_Quit();
 		return 1;
 	}
-	else{
+	else {
+		DrawableObject* first_test_object;
+
+		printf("Creating 1. object...\n");
+		first_test_object = new DrawableObject(renderer);
+		drawable_objects.push_back(*first_test_object);
+
+		printf("Creating 2. object...\n");
+		DrawableObject* second_test_object = new DrawableObject(250., 250., renderer);
+		drawable_objects.push_back(*second_test_object);
+
+		printf("Creating 3. object...\n");
+		DrawableObject* third_test_object = new DrawableObject(300., 10., renderer);
+		drawable_objects.push_back(*third_test_object);
+
 		while (is_Running){
 			handle_input_events();
 			update_game_state();
 			render_current_frame();
-
-
 		}
-
 		clean_up();
 
 		return 0;
@@ -112,42 +117,104 @@ void Game::handle_input_events(){
 	}
 }
 
-void Game::update_game_state(){
+void Game::update_game_state()
+{
+	let_all_objects_interact();
+	spawn_new_objects();
+	remove_dead_objects();
+	apply_friction();
+	update_positions();
+	check_for_border_crossings();
 }
+
+
+void Game::let_all_objects_interact()
+{
+
+}
+
+void Game::spawn_new_objects()
+{
+
+}
+
+void Game::remove_dead_objects()
+{
+
+}
+
+void Game::update_positions() {
+	for (list<DrawableObject>::iterator iter = drawable_objects.begin(); iter != drawable_objects.end(); iter++)
+	{
+		iter->set_x(iter->get_x()+iter->get_x_velocity());
+		iter->set_y(iter->get_y()+iter->get_y_velocity());
+	}
+}
+
+void Game::apply_friction() {
+	for (list<DrawableObject>::iterator iter = drawable_objects.begin(); iter != drawable_objects.end(); iter++)
+	{
+		iter->set_x_velocity(iter->get_x_velocity() * 0.999);
+		iter->set_y_velocity(iter->get_y_velocity() * 0.999);
+	}
+}
+
+
+
+void Game::check_for_border_crossings()
+{
+	for (list<DrawableObject>::iterator iter = drawable_objects.begin(); iter != drawable_objects.end(); iter++)
+		{
+			double vertical_position = iter->get_y();
+			double horizontal_position = iter->get_x();
+
+			if (vertical_position < 0)
+				{
+					iter->set_y(500);
+				}
+			else if (vertical_position > 500)
+				{
+					iter->set_y(0);
+				}
+
+			if (horizontal_position <= 0)
+							{
+								iter->set_x(500);
+							}
+						else if (horizontal_position > 500)
+							{
+								iter->set_x(0);
+							}
+		}
+}
+
+
+
+
+
 
 void Game::render_current_frame(){
 	//clear screen
 	SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
 	SDL_RenderClear(renderer);
 
-	//draw a horizontal line
-	SDL_SetRenderDrawColor(renderer, 0xFF, 0x88, 0x44, 0xFF);
-	SDL_RenderDrawLine(renderer, 10, 150, 250, 150);
-
-	//draw a filled rectangle
-	SDL_Rect filledRect;
-	filledRect.x = 50;
-	filledRect.y = 50;
-	filledRect.h = 20;
-	filledRect.w = 30;
-	SDL_SetRenderDrawColor(renderer, 0xFF, 0x00, 0x00, 0xFF);
-	SDL_RenderFillRect(renderer, &filledRect);
-
-	//draw a rectangle contour
-	SDL_Rect contourRect;
-	contourRect.x = 100;
-	contourRect.y = 100;
-	contourRect.h = 100;
-	contourRect.w = 100;
-	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0x00, 50);
-	SDL_RenderFillRect(renderer, &contourRect);
-
+	// draw all drawable objects:
+	for (list<DrawableObject>::iterator iter = drawable_objects.begin(); iter != drawable_objects.end(); iter++)
+		{
+			iter->draw_myself();
+		}
 
 	//finally render the image!
 	SDL_RenderPresent(renderer);
 }
 
 void Game::clean_up(){
+	// remove all drawable objects
+	for (list<DrawableObject>::iterator current_object = drawable_objects.begin(); current_object != drawable_objects.end(); current_object++)
+	{
+		drawable_objects.erase(current_object);
+	}
+
 	// deallocate surface
 	SDL_FreeSurface(screen_surface);
 	screen_surface = NULL;
