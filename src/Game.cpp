@@ -114,46 +114,74 @@ void Game::handle_input_events(){
 }
 
 void Game::update_game_state(){
+
+	let_all_objects_interact();
+	spawn_new_objects();
+	remove_dead_objects();
+	update_positions();
+	check_for_border_crossings();}
+
+void Game::let_all_objects_interact()
+{
+
+}
+void Game::spawn_new_objects()
+{
+
+}
+
+void Game::remove_dead_objects()
+{
+
+}
+
+void Game::update_positions() {
+
+}
+
+void Game::check_for_border_crossings()
+{
 	for (list<DrawableObject>::iterator iter = drawable_objects.begin(); iter != drawable_objects.end(); iter++)
 		{
-			float current_height = iter->get_y();
-			if (current_height <=0)
+			float vertical_position = iter->get_y();
+			float horizontal_position = iter->get_x();
+
+			if (vertical_position <=0)
 				{
 					iter->set_y(500);
 				}
+			else if (vertical_position >= 500)
+				{
+					iter->set_y(0);
+				}
 			else{
-					iter->set_y(current_height - 0.01);
+					iter->set_y(vertical_position - 0.01);
 			}
-		}
 
+			if (horizontal_position <= 0)
+							{
+								iter->set_x(500);
+							}
+						else if (horizontal_position >= 500)
+							{
+								iter->set_x(0);
+							}
+						else{
+								iter->set_x(vertical_position - 0.01);
+						}
+
+		}
 }
+
+
+
+
+
 
 void Game::render_current_frame(){
 	//clear screen
 	SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
 	SDL_RenderClear(renderer);
-
-	//draw a horizontal line
-	SDL_SetRenderDrawColor(renderer, 0xFF, 0x88, 0x44, 0xFF);
-	SDL_RenderDrawLine(renderer, 10, 150, 250, 150);
-
-	//draw a filled rectangle
-	SDL_Rect filledRect;
-	filledRect.x = 50;
-	filledRect.y = 50;
-	filledRect.h = 20;
-	filledRect.w = 30;
-	SDL_SetRenderDrawColor(renderer, 0xFF, 0x00, 0x00, 0xFF);
-	SDL_RenderFillRect(renderer, &filledRect);
-
-	//draw a rectangle contour
-	SDL_Rect contourRect;
-	contourRect.x = 100;
-	contourRect.y = 100;
-	contourRect.h = 100;
-	contourRect.w = 100;
-	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0x00, 50);
-	SDL_RenderFillRect(renderer, &contourRect);
 
 	// draw all drawable objects:
 	for (list<DrawableObject>::iterator iter = drawable_objects.begin(); iter != drawable_objects.end(); iter++)

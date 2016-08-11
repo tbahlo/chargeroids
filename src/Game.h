@@ -35,9 +35,21 @@ private:
 
 
 	void handle_input_events();
+
 	void update_game_state();
+		void let_all_objects_interact();
+		void spawn_new_objects();
+		void remove_dead_objects();
+		void update_positions();
+		void check_for_border_crossings();
+
 	void render_current_frame();
+
 	void clean_up();
+
+
+
+
 };
 
 #endif /* SRC_GAME_H_ */
