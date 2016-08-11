@@ -24,6 +24,7 @@ int Game::start(){
 	}
 	else {
 		DrawableObject* first_test_object;
+<<<<<<< HEAD
 
 		printf("Creating 1. object...\n");
 		first_test_object = new DrawableObject(renderer);
@@ -34,6 +35,14 @@ int Game::start(){
 		drawable_objects.push_back(*second_test_object);
 
 		printf("Creating 3. object...\n");
+=======
+		first_test_object = new DrawableObject(renderer);
+		drawable_objects.push_back(*first_test_object);
+
+		DrawableObject* second_test_object = new DrawableObject(250., 250., renderer);
+		drawable_objects.push_back(*second_test_object);
+
+>>>>>>> 39749244dc714ccf55e697156dd30b35a5e89450
 		DrawableObject* third_test_object = new DrawableObject(300., 10., renderer);
 		drawable_objects.push_back(*third_test_object);
 
@@ -117,6 +126,7 @@ void Game::handle_input_events(){
 	}
 }
 
+<<<<<<< HEAD
 void Game::update_game_state()
 {
 	let_all_objects_interact();
@@ -127,12 +137,24 @@ void Game::update_game_state()
 	check_for_border_crossings();
 }
 
+=======
+void Game::update_game_state(){
+
+	let_all_objects_interact();
+	spawn_new_objects();
+	remove_dead_objects();
+	update_positions();
+	check_for_border_crossings();}
+>>>>>>> 39749244dc714ccf55e697156dd30b35a5e89450
 
 void Game::let_all_objects_interact()
 {
 
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 39749244dc714ccf55e697156dd30b35a5e89450
 void Game::spawn_new_objects()
 {
 
@@ -141,6 +163,7 @@ void Game::spawn_new_objects()
 void Game::remove_dead_objects()
 {
 
+<<<<<<< HEAD
 }
 
 void Game::update_positions() {
@@ -188,6 +211,48 @@ void Game::check_for_border_crossings()
 		}
 }
 
+=======
+}
+
+void Game::update_positions() {
+
+}
+
+void Game::check_for_border_crossings()
+{
+	for (list<DrawableObject>::iterator iter = drawable_objects.begin(); iter != drawable_objects.end(); iter++)
+		{
+			float vertical_position = iter->get_y();
+			float horizontal_position = iter->get_x();
+
+			if (vertical_position <=0)
+				{
+					iter->set_y(500);
+				}
+			else if (vertical_position >= 500)
+				{
+					iter->set_y(0);
+				}
+			else{
+					iter->set_y(vertical_position - 0.01);
+			}
+
+			if (horizontal_position <= 0)
+							{
+								iter->set_x(500);
+							}
+						else if (horizontal_position >= 500)
+							{
+								iter->set_x(0);
+							}
+						else{
+								iter->set_x(vertical_position - 0.01);
+						}
+
+		}
+}
+
+>>>>>>> 39749244dc714ccf55e697156dd30b35a5e89450
 
 
 

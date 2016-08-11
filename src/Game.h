@@ -40,7 +40,10 @@ private:
 		void let_all_objects_interact();
 		void spawn_new_objects();
 		void remove_dead_objects();
+<<<<<<< HEAD
 		void apply_friction()	;
+=======
+>>>>>>> 39749244dc714ccf55e697156dd30b35a5e89450
 		void update_positions();
 		void check_for_border_crossings();
 
