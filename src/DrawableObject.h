@@ -11,7 +11,7 @@ public:
 	~DrawableObject ();
 
 	void draw_myself();
-<<<<<<< HEAD
+
 	double get_x();
 	double get_y();
 	double get_x_velocity();
@@ -30,20 +30,6 @@ private:
 
 	double x_velocity;
 	double y_velocity;
-=======
-	float get_x();
-	float get_y();
-	void set_x(float x);
-	void set_y(float y);
-
-private:
-	SDL_Renderer* renderer;
-	float x_position;
-	float y_position;
-
-
->>>>>>> 39749244dc714ccf55e697156dd30b35a5e89450
-
 };
 
 #endif /* SRC_DRAWABLEOBJECT_H_ */
