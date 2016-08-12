@@ -15,11 +15,12 @@ class Chargeroid : public DrawableObject
 public:
 	Chargeroid(SDL_Renderer* renderer);
 	Chargeroid(double x, double y, SDL_Renderer* renderer);
+	Chargeroid(double x, double y, double velocity_x, double velocity_y, SDL_Renderer* renderer);
 
 	virtual
 	~Chargeroid();
 
-	double calculate_distance_to(Chargeroid opponent);
+	double calculate_distance_to(Chargeroid* opponent);
 
 private:
 	int mass;

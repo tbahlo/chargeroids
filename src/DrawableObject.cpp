@@ -8,6 +8,17 @@
 #include "DrawableObject.h"
 #include <SDL2/SDL.h>
 
+DrawableObject::DrawableObject(double x, double y, double velocity_x, double velocity_y, SDL_Renderer* given_renderer)
+{
+	x_position = x;
+	y_position = y;
+
+	x_velocity = velocity_x;
+	y_velocity = velocity_y;
+	renderer = given_renderer;
+	printf("created object at (%.0f, %.0f) with speed: (%.2f, %.2f)\n", x_position, y_position, x_velocity, y_velocity);
+}
+
 DrawableObject::DrawableObject(double x, double y, SDL_Renderer* given_renderer)
 {
 	x_position = x;

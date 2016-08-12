@@ -5,6 +5,7 @@
 class DrawableObject
 {
 public:
+	DrawableObject(double x, double y, double velocity_x, double velocity_y, SDL_Renderer* given_renderer);
 	DrawableObject(double x, double y, SDL_Renderer* given_renderer);
 	DrawableObject(SDL_Renderer* given_renderer);
 	virtual

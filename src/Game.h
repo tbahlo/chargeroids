@@ -10,6 +10,8 @@
 #include <SDL2/SDL.h>
 #include <list>
 #include "DrawableObject.h"
+#include "Chargeroid.h"
+
 using namespace std;
 
 

@@ -108,8 +108,18 @@ void Game::handle_input_events(){
                 case SDLK_RIGHT:
                 	printf("RIGHT\n");
                 	break;
+                case SDLK_a:
+                	Chargeroid* new_chargeroid;
+					new_chargeroid = new Chargeroid(250., 250., renderer);
+                	drawable_objects.push_back(*new_chargeroid);
+                	printf("a - add new chargeroid - amount of objects: %i\n", drawable_objects.size());
+                	break;
+                case SDLK_d:
+                	if(drawable_objects.size() > 0) drawable_objects.pop_back();
+                	printf("d - kill youngest object  - amount of objects: %i\n", drawable_objects.size());
+                	break;
                 case SDLK_q:
-                	is_Running=false;
+                	is_Running = false;
                 	break;
                 default:
                 printf("Unknown\n");
