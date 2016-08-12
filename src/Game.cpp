@@ -37,6 +37,7 @@ int Game::start(){
 		DrawableObject* third_test_object = new DrawableObject(300., 10., renderer);
 		drawable_objects.push_back(*third_test_object);
 
+		// MAIN GAME LOOP
 		while (is_Running){
 			handle_input_events();
 			update_game_state();
@@ -128,7 +129,6 @@ void Game::update_game_state()
 	check_for_border_crossings();
 }
 
-
 void Game::let_all_objects_interact()
 {
 
@@ -186,6 +186,7 @@ void Game::check_for_border_crossings()
 							}
 		}
 }
+
 
 void Game::render_current_frame(){
 	//clear screen

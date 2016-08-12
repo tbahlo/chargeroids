@@ -1,4 +1,5 @@
 #include "Game.h"
+#include <time.h>
 /*
 
  * main.cpp
@@ -8,6 +9,9 @@
  */
 int main(int argc, char* argv[]){
 	//TODO: interpret console line arguments
+
+	//seed the random generator
+	srand(time(0));
 
 	//create a Game class instance and run it
 	Game current_game;

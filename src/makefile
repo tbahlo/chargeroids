@@ -23,3 +23,5 @@ chargeroids: main.o Game.o DrawableObject.o
 # clean up - delete all earlier compiled files
 clean:
 	rm -f *.o
+
+	#TODO: add Chargerioid files in build process 

@@ -13,8 +13,8 @@ DrawableObject::DrawableObject(double x, double y, SDL_Renderer* given_renderer)
 	x_position = x;
 	y_position = y;
 
-	x_velocity = (random()-random()) * 0.000000001;
-	y_velocity = (random()-random()) * 0.000000001;
+	x_velocity = double((rand()%200 - rand()%200)) / 100;
+	y_velocity = double((rand()%200 - rand()%200)) / 100;
 	renderer = given_renderer;
 	printf("created object at (%.0f, %.0f) with speed: (%.2f, %.2f)\n", x_position, y_position, x_velocity, y_velocity);
 }
@@ -32,7 +32,6 @@ DrawableObject::DrawableObject(SDL_Renderer* given_renderer)
 
 }
 
-
 DrawableObject::~DrawableObject ()
 {
 	renderer = NULL;
@@ -48,7 +47,6 @@ void DrawableObject::draw_myself()
 	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 	SDL_RenderFillRect(renderer, &my_body);
 }
-
 
 double DrawableObject::get_x()
 {
