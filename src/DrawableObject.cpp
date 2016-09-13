@@ -10,17 +10,21 @@
 
 DrawableObject::DrawableObject(double x, double y, double velocity_x, double velocity_y, SDL_Renderer* given_renderer)
 {
+	is_alive = true;
+
 	x_position = x;
 	y_position = y;
 
 	x_velocity = velocity_x;
 	y_velocity = velocity_y;
 	renderer = given_renderer;
+
 	printf("created object at (%.0f, %.0f) with speed: (%.2f, %.2f)\n", x_position, y_position, x_velocity, y_velocity);
 }
 
 DrawableObject::DrawableObject(double x, double y, SDL_Renderer* given_renderer)
 {
+	is_alive = true;
 	x_position = x;
 	y_position = y;
 
@@ -32,7 +36,7 @@ DrawableObject::DrawableObject(double x, double y, SDL_Renderer* given_renderer)
 
 DrawableObject::DrawableObject(SDL_Renderer* given_renderer)
 {
-
+	is_alive = true;
 	x_position = 100.;
 	y_position = 100.;
 	x_velocity = 0.;
@@ -57,6 +61,16 @@ void DrawableObject::draw_myself()
 	my_body.h = 10;
 	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 	SDL_RenderFillRect(renderer, &my_body);
+}
+
+bool DrawableObject::is_dead()
+{
+return !is_alive;
+}
+
+void DrawableObject::kill()
+{
+	is_alive = false;
 }
 
 double DrawableObject::get_x()

@@ -12,6 +12,9 @@ public:
 	~DrawableObject ();
 
 	void draw_myself();
+	bool is_dead();
+	void kill();
+
 
 	double get_x();
 	double get_y();
@@ -26,6 +29,9 @@ public:
 
 private:
 	SDL_Renderer* renderer;
+	bool is_alive;
+
+	//TODO: change to structures - might be a lot of work
 	double x_position;
 	double y_position;
 
