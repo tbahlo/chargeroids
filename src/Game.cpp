@@ -111,10 +111,7 @@ void Game::handle_input_events(){
                 case SDLK_a:
                 	for (int counter = 0; counter < 2; counter++){
                 		Chargeroid* new_chargeroid;
-                		//DrawableObject* new_chargeroid;
-
                 		new_chargeroid = new Chargeroid(250., 250., renderer);
-                		//new_chargeroid = new DrawableObject(250., 250., renderer);
                 		drawable_objects.push_back(*new_chargeroid);
                 		printf("a - add new chargeroid - amount of objects: %i\n", drawable_objects.size());
                 	}
