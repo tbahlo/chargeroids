@@ -8,7 +8,7 @@ HEADER_DIR    = inc
 DEBUG_DIR     = debug
 RELEASE_DIR   = bin
 
-CC = g++
+CC = g++ -std=c++11
 CFLAGS = -g -lSDL2 -Wall
 all: chargeroids
 
@@ -18,10 +18,9 @@ chargeroids: main.o Game.o DrawableObject.o Chargeroid.o
 
 # create object files from every cpp file you find:
 %.o: %.cpp %.h
-	$(CC) $(CFLAGS) -c -o $@ $<
+	$(CC) -c -o $@ $< $(CFLAGS)
 	
 # clean up - delete all earlier compiled files
 clean:
 	rm -f *.o
-
-	#TODO: add Chargerioid files in build process 
+ 

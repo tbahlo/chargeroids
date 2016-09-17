@@ -20,6 +20,8 @@ public:
 	virtual
 	~Chargeroid();
 
+	void kill() override;
+	void draw_myself() override;
 	double calculate_distance_to(Chargeroid* opponent);
 
 private:

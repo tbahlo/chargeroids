@@ -11,6 +11,7 @@
 DrawableObject::DrawableObject(double x, double y, double velocity_x, double velocity_y, SDL_Renderer* given_renderer)
 {
 	is_alive = true;
+	character_class = 'D';
 
 	x_position = x;
 	y_position = y;
@@ -25,6 +26,7 @@ DrawableObject::DrawableObject(double x, double y, double velocity_x, double vel
 DrawableObject::DrawableObject(double x, double y, SDL_Renderer* given_renderer)
 {
 	is_alive = true;
+	character_class = 'D';
 	x_position = x;
 	y_position = y;
 
@@ -37,6 +39,7 @@ DrawableObject::DrawableObject(double x, double y, SDL_Renderer* given_renderer)
 DrawableObject::DrawableObject(SDL_Renderer* given_renderer)
 {
 	is_alive = true;
+	character_class = 'D';
 	x_position = 100.;
 	y_position = 100.;
 	x_velocity = 0.;
@@ -59,8 +62,26 @@ void DrawableObject::draw_myself()
 	my_body.y = y_position;
 	my_body.w = 10;
 	my_body.h = 10;
-	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+	SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0xFF, 0xFF);
 	SDL_RenderFillRect(renderer, &my_body);
+}
+
+bool DrawableObject::has_child()
+{
+	return children_objects.size() != 0;
+}
+
+DrawableObject DrawableObject::get_child()
+{
+	if (this->has_child()){
+			DrawableObject object_to_be_returned = *children_objects.end();
+			children_objects.pop_back();
+			return object_to_be_returned;
+	}
+	else
+		{
+			return NULL;
+		}
 }
 
 bool DrawableObject::is_dead()

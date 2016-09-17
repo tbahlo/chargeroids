@@ -1,6 +1,9 @@
 #ifndef SRC_DRAWABLEOBJECT_H_
 #define SRC_DRAWABLEOBJECT_H_
 #include <SDL2/SDL.h>
+#include <list>
+
+using namespace std;
 
 class DrawableObject
 {
@@ -11,10 +14,13 @@ public:
 	virtual
 	~DrawableObject ();
 
-	void draw_myself();
+	virtual void draw_myself();
+	virtual void kill();
 	bool is_dead();
-	void kill();
+	bool has_child();
+	virtual DrawableObject get_child();
 
+	char character_class;
 
 	double get_x();
 	double get_y();
@@ -27,9 +33,10 @@ public:
 	void set_x_velocity(double x_velocity);
 	void set_y_velocity(double y_velocity);
 
-private:
+protected:
 	SDL_Renderer* renderer;
 	bool is_alive;
+	list<DrawableObject> children_objects;
 
 	//TODO: change to structures - might be a lot of work
 	double x_position;
