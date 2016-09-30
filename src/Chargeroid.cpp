@@ -39,8 +39,8 @@ Chargeroid::~Chargeroid()
 
 void Chargeroid::kill()
 {
-	Chargeroid first_fragment = Chargeroid(x_position, y_position, x_velocity+50, y_velocity+50, renderer);
-	Chargeroid second_fragment = Chargeroid(x_position, y_position, x_velocity-50, y_velocity-50, renderer);
+	Chargeroid* first_fragment = new Chargeroid(x_position, y_position, x_velocity+50, y_velocity+50, renderer);
+	Chargeroid* second_fragment = new Chargeroid(x_position, y_position, x_velocity-50, y_velocity-50, renderer);
 	children_objects.push_back(first_fragment);
 	children_objects.push_back(second_fragment);
 }

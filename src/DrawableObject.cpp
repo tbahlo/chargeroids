@@ -71,10 +71,10 @@ bool DrawableObject::has_child()
 	return children_objects.size() != 0;
 }
 
-DrawableObject DrawableObject::get_child()
+DrawableObject* DrawableObject::get_child()
 {
 	if (this->has_child()){
-			DrawableObject object_to_be_returned = *children_objects.end();
+			DrawableObject* object_to_be_returned = children_objects.back();
 			children_objects.pop_back();
 			return object_to_be_returned;
 	}

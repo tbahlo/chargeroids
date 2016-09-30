@@ -27,19 +27,19 @@ int Game::start(){
 
 		printf("Creating 1. object...\n");
 		first_test_object = new DrawableObject(renderer);
-		drawable_objects.push_back(*first_test_object);
+		drawable_objects.push_back(first_test_object);
 
 		printf("Creating 2. object...\n");
 		DrawableObject* second_test_object = new DrawableObject(250., 250., renderer);
-		drawable_objects.push_back(*second_test_object);
+		drawable_objects.push_back(second_test_object);
 
 		printf("Creating 3. object...\n");
 		DrawableObject* third_test_object = new DrawableObject(300., 10., renderer);
-		drawable_objects.push_back(*third_test_object);
+		drawable_objects.push_back(third_test_object);
 
 		printf("Creating an chargeroid...\n");
 		DrawableObject* chargeroid_test_object = new Chargeroid(300., 10., renderer);
-		drawable_objects.push_back(*chargeroid_test_object);
+		drawable_objects.push_back(chargeroid_test_object);
 
 
 		// MAIN GAME LOOP
@@ -117,7 +117,7 @@ void Game::handle_input_events(){
 						for (int counter = 0; counter < 2; counter++){
 								Chargeroid* new_chargeroid;
 								new_chargeroid = new Chargeroid(250., 250., renderer);
-								drawable_objects.push_back(*new_chargeroid);
+								drawable_objects.push_back(new_chargeroid);
 								printf("a - add new chargeroid - amount of objects: %i\n", (int) drawable_objects.size());
 						}
 						break;
@@ -126,16 +126,16 @@ void Game::handle_input_events(){
 						printf("d - kill youngest object  - amount of objects: %i\n", (int) drawable_objects.size());
 						break;
 					case SDLK_k:
-						if(drawable_objects.size() > 0) drawable_objects.begin()->kill();
+						if(drawable_objects.size() > 0) drawable_objects.front()->kill();
 						printf("k - marked oldest object as dead  - amount of objects: %i\n", (int) drawable_objects.size());
 						break;
 					case SDLK_i:
 						printf("i - printing informations of every object\n");
-						for (list<DrawableObject>::iterator current_object = drawable_objects.begin();
+						for (list<DrawableObject*>::iterator current_object = drawable_objects.begin();
 								current_object != drawable_objects.end();
 								current_object++)
 							{
-								printf("%c \n", current_object->character_class);
+								printf("%c \n", (*current_object)->character_class);
 							}
 						break;
 
@@ -168,24 +168,24 @@ void Game::let_all_objects_interact()
 
 void Game::spawn_new_objects()
 {
-	for(list<DrawableObject>::iterator current_object = drawable_objects.begin();
+	for(list<DrawableObject*>::iterator current_object = drawable_objects.begin();
 			current_object != drawable_objects.end();
 			current_object++)
 		{
-			while (current_object->has_child())
+			while ((*current_object)->has_child())
 				{
-					drawable_objects.push_back(current_object->get_child());
+					drawable_objects.push_back((*current_object)->get_child());
 				}
 		}
 }
 
 void Game::remove_dead_objects()
 {
-	for (list<DrawableObject>::iterator current_object = drawable_objects.begin();
+	for (list<DrawableObject*>::iterator current_object = drawable_objects.begin();
 			current_object != drawable_objects.end();
 			current_object++)
 	{
-		if (current_object->is_dead())
+		if ((*current_object)->is_dead())
 		{
 			current_object = drawable_objects.erase(current_object);
 			current_object--;
@@ -194,47 +194,47 @@ void Game::remove_dead_objects()
 }
 
 void Game::update_positions() {
-	for (list<DrawableObject>::iterator iter = drawable_objects.begin();
+	for (list<DrawableObject*>::iterator iter = drawable_objects.begin();
 			iter != drawable_objects.end();
 			iter++)
 	{
-		iter->set_x(iter->get_x()+iter->get_x_velocity());
-		iter->set_y(iter->get_y()+iter->get_y_velocity());
+		(*iter)->set_x((*iter)->get_x()+(*iter)->get_x_velocity());
+		(*iter)->set_y((*iter)->get_y()+(*iter)->get_y_velocity());
 	}
 }
 
 void Game::apply_friction() {
-	for (list<DrawableObject>::iterator iter = drawable_objects.begin(); iter != drawable_objects.end(); iter++)
+	for (list<DrawableObject*>::iterator iter = drawable_objects.begin(); iter != drawable_objects.end(); iter++)
 	{
-		iter->set_x_velocity(iter->get_x_velocity() * 0.999);
-		iter->set_y_velocity(iter->get_y_velocity() * 0.999);
+		(*iter)->set_x_velocity((*iter)->get_x_velocity() * 0.999);
+		(*iter)->set_y_velocity((*iter)->get_y_velocity() * 0.999);
 	}
 }
 
 void Game::check_for_border_crossings()
 {
-	for (list<DrawableObject>::iterator iter = drawable_objects.begin(); iter != drawable_objects.end(); iter++)
+	for (list<DrawableObject*>::iterator iter = drawable_objects.begin(); iter != drawable_objects.end(); iter++)
 		{
-			double vertical_position = iter->get_y();
-			double horizontal_position = iter->get_x();
+			double vertical_position = (*iter)->get_y();
+			double horizontal_position = (*iter)->get_x();
 
 			if (vertical_position < -5)
-				{
-					iter->set_y(505);
-				}
+			{
+				(*iter)->set_y(505);
+			}
 			else if (vertical_position > 505)
-				{
-					iter->set_y(-5);
-				}
+			{
+				(*iter)->set_y(-5);
+			}
 
 			if (horizontal_position <= -5)
-							{
-								iter->set_x(505);
-							}
-						else if (horizontal_position > 505)
-							{
-								iter->set_x(-5);
-							}
+			{
+				(*iter)->set_x(505);
+			}
+			else if (horizontal_position > 505)
+			{
+				(*iter)->set_x(-5);
+			}
 		}
 }
 
@@ -245,10 +245,10 @@ void Game::render_current_frame(){
 	SDL_RenderClear(renderer);
 
 	// draw all drawable objects:
-	for (list<DrawableObject>::iterator iter = drawable_objects.begin(); iter != drawable_objects.end(); iter++)
-		{
-			iter->draw_myself();
-		}
+	for (list<DrawableObject*>::iterator iter = drawable_objects.begin(); iter != drawable_objects.end(); iter++)
+	{
+		(*iter)->draw_myself();
+	}
 
 	//finally render the image!
 	SDL_RenderPresent(renderer);
@@ -259,7 +259,7 @@ void Game::clean_up(){
 	// using the q button. I assume somethings wrong here.
 
 	// remove all drawable objects
-	for (list<DrawableObject>::iterator current_object = drawable_objects.begin(); current_object != drawable_objects.end(); current_object++)
+	for (list<DrawableObject*>::iterator current_object = drawable_objects.begin(); current_object != drawable_objects.end(); current_object++)
 	{
 		if(drawable_objects.size() > 0)
 			{

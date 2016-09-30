@@ -33,7 +33,7 @@ private:
 	SDL_Surface* testbild;
 	SDL_Event input_event;
 	SDL_Renderer* renderer;
-	list<DrawableObject> drawable_objects;
+	list<DrawableObject*> drawable_objects;
 
 
 	void handle_input_events();

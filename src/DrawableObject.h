@@ -18,7 +18,7 @@ public:
 	virtual void kill();
 	bool is_dead();
 	bool has_child();
-	virtual DrawableObject get_child();
+	virtual DrawableObject* get_child();
 
 	char character_class;
 
@@ -36,7 +36,7 @@ public:
 protected:
 	SDL_Renderer* renderer;
 	bool is_alive;
-	list<DrawableObject> children_objects;
+	list<DrawableObject*> children_objects;
 
 	//TODO: change to structures - might be a lot of work
 	double x_position;
