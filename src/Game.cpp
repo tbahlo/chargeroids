@@ -150,7 +150,6 @@ void Game::handle_input_events(){
 	}
 }
 
-
 void Game::update_game_state()
 {
 	let_all_objects_interact();
@@ -187,8 +186,10 @@ void Game::remove_dead_objects()
 	{
 		if ((*current_object)->is_dead())
 		{
+			//DrawableObject* object_to_kill = *current_object;
 			current_object = drawable_objects.erase(current_object);
 			current_object--;
+			//delete object_to_kill;
 		}
 	}
 }
@@ -206,8 +207,8 @@ void Game::update_positions() {
 void Game::apply_friction() {
 	for (list<DrawableObject*>::iterator iter = drawable_objects.begin(); iter != drawable_objects.end(); iter++)
 	{
-		(*iter)->set_x_velocity((*iter)->get_x_velocity() * 0.999);
-		(*iter)->set_y_velocity((*iter)->get_y_velocity() * 0.999);
+		(*iter)->set_x_velocity((*iter)->get_x_velocity() * 0.99);
+		(*iter)->set_y_velocity((*iter)->get_y_velocity() * 0.99);
 	}
 }
 

@@ -39,10 +39,27 @@ Chargeroid::~Chargeroid()
 
 void Chargeroid::kill()
 {
-	Chargeroid* first_fragment = new Chargeroid(x_position, y_position, x_velocity+50, y_velocity+50, renderer);
-	Chargeroid* second_fragment = new Chargeroid(x_position, y_position, x_velocity-50, y_velocity-50, renderer);
-	children_objects.push_back(first_fragment);
-	children_objects.push_back(second_fragment);
+	if (mass > 25)
+	{
+		Chargeroid* first_fragment = new Chargeroid(x_position, y_position, x_velocity+1, y_velocity+2, renderer);
+		Chargeroid* second_fragment = new Chargeroid(x_position, y_position, x_velocity-2, y_velocity-1, renderer);
+
+		double mass_difference = rand() % int(mass / 2);
+
+		double first_fragments_mass =  mass / 2 + mass_difference;
+		first_fragment->mass = first_fragments_mass;
+
+		double second_fragments_mass = mass / 2 - mass_difference;
+		second_fragment->mass = second_fragments_mass;
+
+		first_fragment->charge = charge/2;
+		second_fragment->charge = charge/2;
+
+		children_objects.push_back(first_fragment);
+		children_objects.push_back(second_fragment);
+		printf("objects pushed in child list\n");
+	}
+	is_alive = false;
 }
 
 void Chargeroid::draw_myself()
@@ -50,9 +67,9 @@ void Chargeroid::draw_myself()
 	SDL_Rect my_body;
 	my_body.x = x_position;
 	my_body.y = y_position;
-	my_body.w = 10;
-	my_body.h = 10;
-	SDL_SetRenderDrawColor(renderer, 0xFF, 0x00, 0x00, 0xFF);
+	my_body.w = sqrt(mass);
+	my_body.h = sqrt(mass);
+	SDL_SetRenderDrawColor(renderer, 0xFF, int(0xFF * charge/100), int(0xFF * charge/100), 0xFF);
 	SDL_RenderFillRect(renderer, &my_body);
 
 }

@@ -25,8 +25,8 @@ public:
 	double calculate_distance_to(Chargeroid* opponent);
 
 private:
-	int mass;
-	int charge;
+	double mass;
+	double charge;
 };
 
 #endif /* SRC_CHARGEROID_H_ */
