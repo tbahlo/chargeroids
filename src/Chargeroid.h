@@ -22,11 +22,14 @@ public:
 
 	void kill() override;
 	void draw_myself() override;
-	double calculate_distance_to(Chargeroid* opponent);
+	void apply_x_force(double x_force) override;
+	void apply_y_force(double y_force) override;
+
 
 private:
 	double mass;
 	double charge;
+	double calculate_distance_to(Chargeroid* opponent);
 };
 
 #endif /* SRC_CHARGEROID_H_ */

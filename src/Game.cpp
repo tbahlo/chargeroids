@@ -162,6 +162,50 @@ void Game::update_game_state()
 
 void Game::let_all_objects_interact()
 {
+	// iterate through all objects:
+	for (list<DrawableObject*>::iterator interacting_object = drawable_objects.begin();
+			interacting_object != drawable_objects.end();
+			interacting_object++)
+	{
+		// you do not have to interact with yourself and with none of the elements coming
+		// before you because they will already have interacted with you
+		for (list<DrawableObject*>::iterator partner_object = interacting_object++;
+				partner_object != drawable_objects.end();
+				partner_object++)
+		{
+			// get parameters
+			double obj1_x = (*interacting_object)->get_x();
+			double obj1_y = (*interacting_object)->get_y();
+			double obj2_x = (*partner_object)->get_x();
+			double obj2_y = (*partner_object)->get_y();
+			double obj1_charge = (*interacting_object)->get_charge();
+			double obj2_charge = (*partner_object)->get_charge();
+
+			// calculate resulting vectors
+			double diff_x = obj2_x - obj1_x;
+			double diff_y = obj2_y - obj1_y;
+
+			double distance = sqrt(
+					pow(diff_x, 2)
+					+ pow(diff_y, 2));
+
+			double force_magnitude = obj1_charge * obj2_charge / pow(distance, 2);
+			force_magnitude *= 0.001;
+			double force_x = force_magnitude * diff_x / distance;
+			double force_y = force_magnitude * diff_y / distance;
+			//                                 ^^^^^^^^^^^^^^^^^^
+			//                                 these are the unit vector components for (1)->(2)
+
+
+			// apply force to objects
+			(*partner_object)->apply_x_force(force_x);
+			(*partner_object)->apply_y_force(force_y);
+			(*interacting_object)->apply_x_force(-force_x);
+			(*interacting_object)->apply_y_force(-force_y);
+		}
+	}
+
+
 
 }
 
@@ -199,8 +243,7 @@ void Game::update_positions() {
 			iter != drawable_objects.end();
 			iter++)
 	{
-		(*iter)->set_x((*iter)->get_x()+(*iter)->get_x_velocity());
-		(*iter)->set_y((*iter)->get_y()+(*iter)->get_y_velocity());
+		(*iter)->update();
 	}
 }
 

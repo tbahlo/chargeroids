@@ -12,12 +12,19 @@ DrawableObject::DrawableObject(double x, double y, double velocity_x, double vel
 {
 	is_alive = true;
 	character_class = 'D';
+	mass = 1;
+	charge = 0;
+
 
 	x_position = x;
 	y_position = y;
 
 	x_velocity = velocity_x;
 	y_velocity = velocity_y;
+
+	x_force = 0;
+	y_force = 0;
+
 	renderer = given_renderer;
 
 	printf("created object at (%.0f, %.0f) with speed: (%.2f, %.2f)\n", x_position, y_position, x_velocity, y_velocity);
@@ -27,11 +34,18 @@ DrawableObject::DrawableObject(double x, double y, SDL_Renderer* given_renderer)
 {
 	is_alive = true;
 	character_class = 'D';
+	mass = 1;
+	charge = 0;
+
 	x_position = x;
 	y_position = y;
 
 	x_velocity = double((rand()%200 - rand()%200)) / 100;
 	y_velocity = double((rand()%200 - rand()%200)) / 100;
+
+	x_force = 0;
+	y_force = 0;
+
 	renderer = given_renderer;
 	printf("created object at (%.0f, %.0f) with speed: (%.2f, %.2f)\n", x_position, y_position, x_velocity, y_velocity);
 }
@@ -40,10 +54,15 @@ DrawableObject::DrawableObject(SDL_Renderer* given_renderer)
 {
 	is_alive = true;
 	character_class = 'D';
+	mass = 1;
+	charge = 0;
 	x_position = 100.;
 	y_position = 100.;
 	x_velocity = 0.;
 	y_velocity = 0.;
+	x_force = 0;
+	y_force = 0;
+
 
 	renderer = given_renderer;
 	printf("created std object at (%.0f, %.0f) with speed: (%.2f, %.2f)\n", x_position, y_position, x_velocity, y_velocity);
@@ -53,6 +72,14 @@ DrawableObject::DrawableObject(SDL_Renderer* given_renderer)
 DrawableObject::~DrawableObject ()
 {
 	renderer = NULL;
+}
+
+void DrawableObject::apply_x_force(double x_force)
+{
+}
+
+void DrawableObject::apply_y_force(double y_force)
+{
 }
 
 void DrawableObject::draw_myself()
@@ -69,6 +96,15 @@ void DrawableObject::draw_myself()
 bool DrawableObject::has_child()
 {
 	return children_objects.size() != 0;
+}
+
+void DrawableObject::update()
+{
+	x_velocity += x_force / mass;
+	y_velocity += y_force / mass;
+
+	x_position += x_velocity;
+	y_position += y_velocity;
 }
 
 DrawableObject* DrawableObject::get_child()
@@ -92,6 +128,16 @@ return !is_alive;
 void DrawableObject::kill()
 {
 	is_alive = false;
+}
+
+double DrawableObject::get_charge()
+{
+	return charge;
+}
+
+double DrawableObject::get_mass()
+{
+	return mass;
 }
 
 double DrawableObject::get_x()

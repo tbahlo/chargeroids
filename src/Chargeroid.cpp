@@ -31,7 +31,6 @@ Chargeroid::Chargeroid(double x, double y, double velocity_x, double velocity_y,
 	charge = 100;
 }
 
-
 Chargeroid::~Chargeroid()
 {
 	// TODO Auto-generated destructor stub
@@ -72,6 +71,16 @@ void Chargeroid::draw_myself()
 	SDL_SetRenderDrawColor(renderer, 0xFF, int(0xFF * charge/100), int(0xFF * charge/100), 0xFF);
 	SDL_RenderFillRect(renderer, &my_body);
 
+}
+
+void Chargeroid::apply_x_force(double xforce)
+{
+	x_force += xforce;
+}
+
+void Chargeroid::apply_y_force(double yforce)
+{
+	y_force += yforce;
 }
 
 double Chargeroid::calculate_distance_to(Chargeroid* opponent)
