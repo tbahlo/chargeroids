@@ -40,8 +40,9 @@ void Chargeroid::kill()
 {
 	if (mass > 25)
 	{
-		Chargeroid* first_fragment = new Chargeroid(x_position, y_position, x_velocity+1, y_velocity+2, renderer);
-		Chargeroid* second_fragment = new Chargeroid(x_position, y_position, x_velocity-2, y_velocity-1, renderer);
+		//TODO implement momentum conservation
+		Chargeroid* first_fragment = new Chargeroid(x_position, y_position, renderer);
+		Chargeroid* second_fragment = new Chargeroid(x_position, y_position, renderer);
 
 		double mass_difference = rand() % int(mass / 2);
 
@@ -73,14 +74,14 @@ void Chargeroid::draw_myself()
 
 }
 
-void Chargeroid::apply_x_force(double xforce)
+void Chargeroid::apply_x_force(double x_force)
 {
-	x_force += xforce;
+	this->x_force += x_force;
 }
 
-void Chargeroid::apply_y_force(double yforce)
+void Chargeroid::apply_y_force(double y_force)
 {
-	y_force += yforce;
+	this->y_force += y_force;
 }
 
 double Chargeroid::calculate_distance_to(Chargeroid* opponent)

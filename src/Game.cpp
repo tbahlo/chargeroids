@@ -118,7 +118,18 @@ void Game::handle_input_events(){
 								Chargeroid* new_chargeroid;
 								new_chargeroid = new Chargeroid(250., 250., renderer);
 								drawable_objects.push_back(new_chargeroid);
-								printf("a - add new chargeroid - amount of objects: %i\n", (int) drawable_objects.size());
+								printf("a - add new chargeroid (charge %.2f, mass %.2f) - amount of objects: %i\n",
+								       new_chargeroid->get_charge(),
+								       new_chargeroid->get_mass(),
+								       (int) drawable_objects.size());
+						}
+						break;
+					case SDLK_o:
+						for (int counter = 0; counter < 2; counter++){
+								DrawableObject* new_object;
+								new_object = new DrawableObject(250., 250., renderer);
+								drawable_objects.push_back(new_object);
+								printf("o - add new object - amount of objects: %i\n", (int) drawable_objects.size());
 						}
 						break;
 					case SDLK_d:
@@ -167,9 +178,16 @@ void Game::let_all_objects_interact()
 			interacting_object != drawable_objects.end();
 			interacting_object++)
 	{
-		// you do not have to interact with yourself and with none of the elements coming
-		// before you because they will already have interacted with you
-		for (list<DrawableObject*>::iterator partner_object = interacting_object++;
+		// you do not have to interact with yourself and with none of the
+		// elements coming before you because they will already have interacted
+		// with you
+
+		// the following line is a ugly hack to start from the "next" item
+		// it is necessary because "interacting_object++" actually increments
+		// the iterator
+		list<DrawableObject*>::iterator dummy_iterator = interacting_object;
+		dummy_iterator++;
+		for (list<DrawableObject*>::iterator partner_object = dummy_iterator;
 				partner_object != drawable_objects.end();
 				partner_object++)
 		{
@@ -188,20 +206,36 @@ void Game::let_all_objects_interact()
 			double distance = sqrt(
 					pow(diff_x, 2)
 					+ pow(diff_y, 2));
+			// lower cap for distance to avoid division-by-(nearly)zero problems
+			if (distance < 1) distance = 1;
 
 			double force_magnitude = obj1_charge * obj2_charge / pow(distance, 2);
-			force_magnitude *= 0.001;
+//			printf("obj1: x=%.2f, y=%.2f, charge=%.2f|| obj2: x=%.2f, y=%.2f, charge=%.2f\n",
+//			       obj1_x,
+//			       obj1_y,
+//			       obj1_charge,
+//			       obj2_x,
+//			       obj2_y,
+//			       obj2_charge);
+			force_magnitude *= 0.01;
 			double force_x = force_magnitude * diff_x / distance;
 			double force_y = force_magnitude * diff_y / distance;
 			//                                 ^^^^^^^^^^^^^^^^^^
-			//                                 these are the unit vector components for (1)->(2)
+			//   these are the unit vector components for (1)->(2)
+//			printf("---ddist: %.2f, force_mag: %.2f, fx=%.2f, fy=%.2f\n",
+//			       distance,
+//			       force_magnitude,
+//			       force_x,
+//			       force_y);
+
 
 
 			// apply force to objects
-			(*partner_object)->apply_x_force(force_x);
-			(*partner_object)->apply_y_force(force_y);
 			(*interacting_object)->apply_x_force(-force_x);
 			(*interacting_object)->apply_y_force(-force_y);
+			(*partner_object)->apply_x_force(force_x);
+			(*partner_object)->apply_y_force(force_y);
+
 		}
 	}
 

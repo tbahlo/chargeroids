@@ -12,7 +12,7 @@ DrawableObject::DrawableObject(double x, double y, double velocity_x, double vel
 {
 	is_alive = true;
 	character_class = 'D';
-	mass = 1;
+	mass = 100;
 	charge = 0;
 
 
@@ -34,7 +34,7 @@ DrawableObject::DrawableObject(double x, double y, SDL_Renderer* given_renderer)
 {
 	is_alive = true;
 	character_class = 'D';
-	mass = 1;
+	mass = 100;
 	charge = 0;
 
 	x_position = x;
@@ -54,7 +54,7 @@ DrawableObject::DrawableObject(SDL_Renderer* given_renderer)
 {
 	is_alive = true;
 	character_class = 'D';
-	mass = 1;
+	mass = 100;
 	charge = 0;
 	x_position = 100.;
 	y_position = 100.;
@@ -100,9 +100,13 @@ bool DrawableObject::has_child()
 
 void DrawableObject::update()
 {
-	x_velocity += x_force / mass;
-	y_velocity += y_force / mass;
+	if(x_force != 0 || y_force != 0) {
+		// acceleration:
+		x_velocity += x_force / mass;
+		y_velocity += y_force / mass;
+	}
 
+	//position update:
 	x_position += x_velocity;
 	y_position += y_velocity;
 }
