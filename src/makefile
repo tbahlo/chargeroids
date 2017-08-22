@@ -29,3 +29,5 @@ main.o: main.cpp
 clean:
 	rm -f *.o
  
+run: chargeroids
+	./chargeroids
