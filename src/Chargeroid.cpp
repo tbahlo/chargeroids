@@ -12,7 +12,7 @@ Chargeroid::Chargeroid(SDL_Renderer* renderer)
 {
 	character_class = 'C';
 	mass = rand()%90 + 10;
-	charge = 100;
+	charge = 5;
 }
 
 Chargeroid::Chargeroid(double x, double y, SDL_Renderer* renderer)
@@ -20,7 +20,7 @@ Chargeroid::Chargeroid(double x, double y, SDL_Renderer* renderer)
 {
 	mass = rand()%90 + 10;
 	character_class = 'C';
-	charge = 100;
+	charge = 5;
 }
 
 Chargeroid::Chargeroid(double x, double y, double velocity_x, double velocity_y, SDL_Renderer* renderer)
@@ -28,7 +28,7 @@ Chargeroid::Chargeroid(double x, double y, double velocity_x, double velocity_y,
 {
 	character_class = 'C';
 	mass = rand()%90 + 10;
-	charge = 100;
+	charge = 5;
 }
 
 Chargeroid::~Chargeroid()
@@ -69,7 +69,7 @@ void Chargeroid::draw_myself()
 	my_body.y = y_position;
 	my_body.w = sqrt(mass);
 	my_body.h = sqrt(mass);
-	SDL_SetRenderDrawColor(renderer, 0xFF, int(0xFF * charge/100), int(0xFF * charge/100), 0xFF);
+	SDL_SetRenderDrawColor(renderer, 0xFF, int(0xFF * charge/5), int(0xFF * charge/5), 0xFF);
 	SDL_RenderFillRect(renderer, &my_body);
 
 }

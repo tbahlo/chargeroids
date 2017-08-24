@@ -27,8 +27,6 @@ public:
 
 
 private:
-	double mass;
-	double charge;
 	double calculate_distance_to(Chargeroid* opponent);
 };
 
