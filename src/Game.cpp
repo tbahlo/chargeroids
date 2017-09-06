@@ -146,7 +146,7 @@ void Game::handle_input_events(){
 								current_object != drawable_objects.end();
 								current_object++)
 							{
-								printf("%c \n", (*current_object)->character_class);
+								printf("%c: m=%.0f q=%.2f \n", (*current_object)->character_class, (*current_object)->get_mass(), (*current_object)->get_charge());
 							}
 						break;
 
@@ -284,8 +284,8 @@ void Game::update_positions() {
 void Game::apply_friction() {
 	for (list<DrawableObject*>::iterator iter = drawable_objects.begin(); iter != drawable_objects.end(); iter++)
 	{
-		(*iter)->set_x_velocity((*iter)->get_x_velocity() * 0.99);
-		(*iter)->set_y_velocity((*iter)->get_y_velocity() * 0.99);
+		(*iter)->set_x_velocity((*iter)->get_x_velocity() * 0.9);
+		(*iter)->set_y_velocity((*iter)->get_y_velocity() * 0.9);
 	}
 }
 
