@@ -1,9 +1,6 @@
 aktuelles TODO:
 * Interaktion funktioniert.
   Probleme: 
-  ** Chargeroids werden mit charge=0 und falscher Masse initialisiert (von DrawableObject übernommen?)
-  *** scheinbar ein scope Problem. Der class charakter wird im Chargeroid konstruktor korrekt geädert, 
-      die masse und ladung aber nicht. => minimalbeispiel programmieren und lernen warum.
   ** Interaktion funktioniert natürlich nicht über Grenzflächen hinweg
   *** "quick" and dirty Lösung: unelegant viele Distanzabfragen bauen o_O
 * Impulserhaltung bei Fragmentierung implementieren und Fragmentierung verbessern
