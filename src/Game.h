@@ -11,6 +11,7 @@
 #include <list>
 #include "DrawableObject.h"
 #include "Chargeroid.h"
+#include "Player.h"
 
 using namespace std;
 
@@ -34,6 +35,7 @@ private:
 	SDL_Event input_event;
 	SDL_Renderer* renderer;
 	list<DrawableObject*> drawable_objects;
+	Player* active_player;
 
 
 	void handle_input_events();

@@ -3,9 +3,11 @@ aktuelles TODO:
   Probleme: 
   ** Interaktion funktioniert natürlich nicht über Grenzflächen hinweg
   *** "quick" and dirty Lösung: unelegant viele Distanzabfragen bauen o_O
+* Spieler implementieren
+  ** boost aktuell in pfeiltastenrichtung und nicht über rotation und schub
+  ** boost hängt von tastenwiederholrate ab
 * Impulserhaltung bei Fragmentierung implementieren und Fragmentierung verbessern
 * Farbgebung der Chargeroids anpassen
-* Spieler implementieren
 
 
 

@@ -1,6 +1,6 @@
 #include "Game.h"
 #include "SDL2/SDL.h"
-#include "DrawableObject.h"
+//#include "DrawableObject.h"
 
 Game::Game() {
 	is_Running = true;
@@ -9,6 +9,7 @@ Game::Game() {
 	testbild = NULL;
 	//input_event = NULL;
 	renderer = NULL;
+	active_player = NULL;
 }
 
 Game::~Game() {
@@ -25,6 +26,11 @@ int Game::start(){
 	else {
 		DrawableObject* first_test_object;
 
+		printf("Creating a Player...\n");
+		Player* player = new Player(300., 300., renderer);
+		drawable_objects.push_back(player);
+		active_player = player;
+
 		printf("Creating 1. object...\n");
 		first_test_object = new DrawableObject(renderer);
 		drawable_objects.push_back(first_test_object);
@@ -37,7 +43,7 @@ int Game::start(){
 		DrawableObject* third_test_object = new DrawableObject(300., 10., renderer);
 		drawable_objects.push_back(third_test_object);
 
-		printf("Creating an chargeroid...\n");
+		printf("Creating a chargeroid...\n");
 		DrawableObject* chargeroid_test_object = new Chargeroid(300., 10., renderer);
 		drawable_objects.push_back(chargeroid_test_object);
 
@@ -102,17 +108,37 @@ void Game::handle_input_events(){
 				// check which key	 was pressed:
 				switch ( input_event.key.keysym.sym ){
 					case SDLK_UP:
-						printf("UP\n");
-						break;
+							{
+								printf("UP\n");
+								double old_speed = active_player->get_y_velocity();
+								double new_speed = old_speed - active_player->acceleration;
+								active_player->set_y_velocity(new_speed);
+								break;
+							}
 					case SDLK_DOWN:
-						printf("DOWN\n");
-						break;
+							{
+								printf("DOWN\n");
+								double old_speed = active_player->get_y_velocity();
+								double new_speed = old_speed + active_player->acceleration;
+								active_player->set_y_velocity(new_speed);
+								break;
+							}
 					case SDLK_LEFT:
-						printf("LEFT\n");
-						break;
+							{
+								printf("LEFT\n");
+								double old_speed = active_player->get_x_velocity();
+								double new_speed = old_speed - active_player->acceleration;
+								active_player->set_x_velocity(new_speed);
+								break;
+							}
 					case SDLK_RIGHT:
-						printf("RIGHT\n");
-						break;
+							{
+								printf("RIGHT\n");
+								double old_speed = active_player->get_x_velocity();
+								double new_speed = old_speed + active_player->acceleration;
+								active_player->set_x_velocity(new_speed);
+								break;
+							}
 					case SDLK_a:
 						for (int counter = 0; counter < 2; counter++){
 								Chargeroid* new_chargeroid;
@@ -169,6 +195,7 @@ void Game::update_game_state()
 	apply_friction();
 	update_positions();
 	check_for_border_crossings();
+	printf("Player speed before: %f\n", active_player->get_y_velocity());
 }
 
 void Game::let_all_objects_interact()
@@ -284,8 +311,8 @@ void Game::update_positions() {
 void Game::apply_friction() {
 	for (list<DrawableObject*>::iterator iter = drawable_objects.begin(); iter != drawable_objects.end(); iter++)
 	{
-		(*iter)->set_x_velocity((*iter)->get_x_velocity() * 0.9);
-		(*iter)->set_y_velocity((*iter)->get_y_velocity() * 0.9);
+		(*iter)->set_x_velocity((*iter)->get_x_velocity() * 0.99);
+		(*iter)->set_y_velocity((*iter)->get_y_velocity() * 0.99);
 	}
 }
 
