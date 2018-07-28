@@ -195,7 +195,7 @@ void Game::update_game_state()
 	apply_friction();
 	update_positions();
 	check_for_border_crossings();
-	printf("Player speed before: %f\n", active_player->get_y_velocity());
+	//printf("Player speed before: %f\n", active_player->get_y_velocity());
 }
 
 void Game::let_all_objects_interact()

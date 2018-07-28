@@ -64,13 +64,26 @@ void Chargeroid::kill()
 
 void Chargeroid::draw_myself()
 {
-	SDL_Rect my_body;
-	my_body.x = x_position;
-	my_body.y = y_position;
-	my_body.w = sqrt(mass);
-	my_body.h = sqrt(mass);
-	SDL_SetRenderDrawColor(renderer, 0xFF, int(0xFF * charge/5), int(0xFF * charge/5), 0xFF);
-	SDL_RenderFillRect(renderer, &my_body);
+		SDL_SetRenderDrawColor(renderer, 0xFF, int(0xFF * charge/5), int(0xFF * charge/5), 0xFF);
+
+		// draw "star" shape
+		double radius = sqrt(mass);
+		for (double angle = 0; angle < 360; angle += 360/10)
+		{
+				SDL_RenderDrawLine(renderer, 
+								x_position, 
+								y_position,
+								x_position + radius * cos(angle / 360. * 2 * 3.14159),
+								y_position + radius * sin(angle / 360. * 2 * 3.14159));
+		}
+
+		// draw velocity vector
+		SDL_RenderDrawLine(renderer, 
+						x_position, 
+						y_position,
+						x_position + 100 * x_velocity, 
+						y_position + 100 * y_velocity);
+
 
 }
 

@@ -99,6 +99,7 @@ void DrawableObject::draw_myself()
 		my_body.h = 10;
 		SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0xFF, 0xFF); //RGBA - Blue
 		SDL_RenderFillRect(renderer, &my_body);
+		
 }
 
 bool DrawableObject::has_child()
