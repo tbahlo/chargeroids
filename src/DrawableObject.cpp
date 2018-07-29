@@ -9,10 +9,8 @@
 #include <SDL2/SDL.h>
 
 DrawableObject::DrawableObject(
-				double x,
-				double y,
-				double velocity_x,
-				double velocity_y,
+				Position given_position,
+				Velocity given_velocity,
 				SDL_Renderer* given_renderer)
 {
 		is_alive = true;
@@ -21,23 +19,18 @@ DrawableObject::DrawableObject(
 		charge = 0;
 
 
-		x_position = x;
-		y_position = y;
+		position = given_position;
+		velocity = given_velocity;
 
-		x_velocity = velocity_x;
-		y_velocity = velocity_y;
-
-		x_force = 0;
-		y_force = 0;
+		force = {0, 0};
 
 		renderer = given_renderer;
 
-		printf("created object at (%.0f, %.0f) with speed: (%.2f, %.2f)\n", x_position, y_position, x_velocity, y_velocity);
+		printf("created object at (%.0f, %.0f) with speed: (%.2f, %.2f)\n", position.x, position.y, velocity.vx, velocity.vy);
 }
 
 DrawableObject::DrawableObject(
-				double x, 
-				double y, 
+				Position given_position, 
 				SDL_Renderer* given_renderer)
 {
 		is_alive = true;
@@ -45,17 +38,16 @@ DrawableObject::DrawableObject(
 		mass = 100;
 		charge = 0;
 
-		x_position = x;
-		y_position = y;
+		position = given_position;
 
-		x_velocity = double((rand()%200 - rand()%200)) / 100;
-		y_velocity = double((rand()%200 - rand()%200)) / 100;
+		velocity.vx = double((rand()%200 - rand()%200)) / 100;
+		velocity.vy = double((rand()%200 - rand()%200)) / 100;
 
-		x_force = 0;
-		y_force = 0;
+		force.fx = 0;
+		force.fy = 0;
 
 		renderer = given_renderer;
-		printf("created object at (%.0f, %.0f) with speed: (%.2f, %.2f)\n", x_position, y_position, x_velocity, y_velocity);
+		printf("created object at (%.0f, %.0f) with speed: (%.2f, %.2f)\n", position.x, position.y, velocity.vx, velocity.vy);
 }
 
 DrawableObject::DrawableObject(SDL_Renderer* given_renderer)
@@ -64,16 +56,16 @@ DrawableObject::DrawableObject(SDL_Renderer* given_renderer)
 		character_class = 'D';
 		mass = 100;
 		charge = 0;
-		x_position = 100.;
-		y_position = 100.;
-		x_velocity = 0.;
-		y_velocity = 0.;
-		x_force = 0;
-		y_force = 0;
+		position.x = 100.;
+		position.y = 100.;
+		velocity.vx = 0.;
+		velocity.vy = 0.;
+		force.fx = 0;
+		force.fy = 0;
 
 
 		renderer = given_renderer;
-		printf("created std object at (%.0f, %.0f) with speed: (%.2f, %.2f)\n", x_position, y_position, x_velocity, y_velocity);
+		printf("created std object at (%.0f, %.0f) with speed: (%.2f, %.2f)\n", position.x, position.y, velocity.vx, velocity.vy);
 
 }
 
@@ -82,19 +74,15 @@ DrawableObject::~DrawableObject ()
 		renderer = NULL;
 }
 
-void DrawableObject::apply_x_force(double x_force)
-{
-}
-
-void DrawableObject::apply_y_force(double y_force)
+void DrawableObject::apply_force(Force given_force)
 {
 }
 
 void DrawableObject::draw_myself()
 {
 		SDL_Rect my_body;
-		my_body.x = x_position;
-		my_body.y = y_position;
+		my_body.x = position.x;
+		my_body.y = position.y;
 		my_body.w = 10;
 		my_body.h = 10;
 		SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0xFF, 0xFF); //RGBA - Blue
@@ -110,14 +98,14 @@ bool DrawableObject::has_child()
 void DrawableObject::update()
 {
 		// acceleration:
-		if(x_force != 0 || y_force != 0) {
-				x_velocity += x_force / mass;
-				y_velocity += y_force / mass;
+		if(force.fx != 0 || force.fy != 0) {
+				velocity.vx += force.fx / mass;
+				velocity.vy += force.fy / mass;
 		}
 
 		//position update:
-		x_position += x_velocity;
-		y_position += y_velocity;
+		position.x += velocity.vx;
+		position.y += velocity.vy;
 }
 
 DrawableObject* DrawableObject::get_child()
@@ -153,40 +141,22 @@ double DrawableObject::get_mass()
 		return mass;
 }
 
-double DrawableObject::get_x()
+Position DrawableObject::get_pos()
 {
-		return x_position;
+		return position;
 }
 
-double DrawableObject::get_y()
+Velocity DrawableObject::get_velocity()
 {
-		return y_position;
+		return velocity;
 }
 
-double DrawableObject::get_x_velocity()
+void DrawableObject::set_position(Position pos)
 {
-		return x_velocity;
+		position = pos;
 }
 
-double DrawableObject::get_y_velocity()
-{
-		return y_velocity;
+void DrawableObject::set_velocity(Velocity vel){
+		velocity = vel;
 }
 
-void DrawableObject::set_x(double x)
-{
-		x_position = x;
-}
-
-void DrawableObject::set_y(double y)
-{
-		y_position = y;
-}
-
-void DrawableObject::set_x_velocity(double x_vel){
-		x_velocity = x_vel;
-}
-
-void DrawableObject::set_y_velocity(double y_vel){
-		y_velocity = y_vel;
-}

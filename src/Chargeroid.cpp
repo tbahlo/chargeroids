@@ -15,16 +15,16 @@ Chargeroid::Chargeroid(SDL_Renderer* renderer)
 	charge = 5;
 }
 
-Chargeroid::Chargeroid(double x, double y, SDL_Renderer* renderer)
-: DrawableObject(x, y, renderer)
+Chargeroid::Chargeroid(Position pos, SDL_Renderer* renderer)
+: DrawableObject(pos, renderer)
 {
 	mass = rand()%90 + 10;
 	character_class = 'C';
 	charge = 5;
 }
 
-Chargeroid::Chargeroid(double x, double y, double velocity_x, double velocity_y, SDL_Renderer* renderer)
-: DrawableObject(x, y, velocity_x, velocity_y, renderer)
+Chargeroid::Chargeroid(Position pos, Velocity vel, SDL_Renderer* renderer)
+: DrawableObject(pos, vel, renderer)
 {
 	character_class = 'C';
 	mass = rand()%90 + 10;
@@ -40,9 +40,10 @@ void Chargeroid::kill()
 {
 	if (mass > 25)
 	{
-		//TODO implement momentum conservation
-		Chargeroid* first_fragment = new Chargeroid(x_position, y_position, renderer);
-		Chargeroid* second_fragment = new Chargeroid(x_position, y_position, renderer);
+		//TODO implement momentum conservation 
+		//WARNING: FRAGMENTS ARE ON TOP OF EACH OTHER => SHIFT THEM A LITTLE!
+		Chargeroid* first_fragment = new Chargeroid(position, renderer);
+		Chargeroid* second_fragment = new Chargeroid(position, renderer);
 
 		double mass_difference = rand() % int(mass / 2);
 
@@ -71,37 +72,33 @@ void Chargeroid::draw_myself()
 		for (double angle = 0; angle < 360; angle += 360/10)
 		{
 				SDL_RenderDrawLine(renderer, 
-								x_position, 
-								y_position,
-								x_position + radius * cos(angle / 360. * 2 * 3.14159),
-								y_position + radius * sin(angle / 360. * 2 * 3.14159));
+								position.x, 
+								position.y,
+								position.x + radius * cos(angle / 360. * 2 * 3.14159),
+								position.y + radius * sin(angle / 360. * 2 * 3.14159));
 		}
 
 		// draw velocity vector
 		SDL_RenderDrawLine(renderer, 
-						x_position, 
-						y_position,
-						x_position + 100 * x_velocity, 
-						y_position + 100 * y_velocity);
+						position.x, 
+						position.y,
+						position.x + 100 * velocity.vx, 
+						position.y + 100 * velocity.vy);
 
 
 }
 
-void Chargeroid::apply_x_force(double x_force)
+void Chargeroid::apply_force(Force ext_force)
 {
-	this->x_force += x_force;
-}
-
-void Chargeroid::apply_y_force(double y_force)
-{
-	this->y_force += y_force;
+	this->force.fx += ext_force.fx;
+	this->force.fy += ext_force.fy;
 }
 
 double Chargeroid::calculate_distance_to(Chargeroid* opponent)
 {
 	double result = 0;
-	double others_x = opponent->get_x();
-	double others_y = opponent->get_y();
-	result = sqrt( pow(others_x - get_x(), 2) + pow(others_y - get_y(), 2));
+	double others_x = opponent->get_pos().x;
+	double others_y = opponent->get_pos().y;
+	result = sqrt( pow(others_x - position.x, 2) + pow(others_y - position.y, 2));
 	return result;
 }

@@ -9,12 +9,12 @@
 #define SRC_GAME_H_
 #include <SDL2/SDL.h>
 #include <list>
+#include "types.h"
 #include "DrawableObject.h"
 #include "Chargeroid.h"
 #include "Player.h"
 
 using namespace std;
-
 
 class Game {
 public:

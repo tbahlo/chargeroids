@@ -8,22 +8,22 @@
 #ifndef SRC_CHARGEROID_H_
 #define SRC_CHARGEROID_H_
 
+#include "types.h"
 #include "DrawableObject.h"
 
 class Chargeroid : public DrawableObject
 {
 public:
 	Chargeroid(SDL_Renderer* renderer);
-	Chargeroid(double x, double y, SDL_Renderer* renderer);
-	Chargeroid(double x, double y, double velocity_x, double velocity_y, SDL_Renderer* renderer);
+	Chargeroid(Position pos, SDL_Renderer* renderer);
+	Chargeroid(Position pos, Velocity vel, SDL_Renderer* renderer);
 
 	virtual
 	~Chargeroid();
 
 	void kill() override;
 	void draw_myself() override;
-	void apply_x_force(double x_force) override;
-	void apply_y_force(double y_force) override;
+	void apply_force(Force force) override;
 
 
 private:

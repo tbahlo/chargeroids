@@ -1,6 +1,5 @@
 #include "Game.h"
 #include "SDL2/SDL.h"
-//#include "DrawableObject.h"
 
 Game::Game() {
 	is_Running = true;
@@ -27,7 +26,11 @@ int Game::start(){
 		DrawableObject* first_test_object;
 
 		printf("Creating a Player...\n");
-		Player* player = new Player(300., 300., renderer);
+		Position player_pos;
+		player_pos.x = 300;
+		player_pos.y = 300;
+		Player* player = new Player(renderer);
+		player->set_position(player_pos);
 		drawable_objects.push_back(player);
 		active_player = player;
 
@@ -35,24 +38,16 @@ int Game::start(){
 		first_test_object = new DrawableObject(renderer);
 		drawable_objects.push_back(first_test_object);
 
-		printf("Creating 2. object...\n");
-		DrawableObject* second_test_object = new DrawableObject(250., 250., renderer);
-		drawable_objects.push_back(second_test_object);
-
-		printf("Creating 3. object...\n");
-		DrawableObject* third_test_object = new DrawableObject(300., 10., renderer);
-		drawable_objects.push_back(third_test_object);
-
 		printf("Creating a chargeroid...\n");
-		DrawableObject* chargeroid_test_object = new Chargeroid(300., 10., renderer);
+		Chargeroid* chargeroid_test_object = new Chargeroid(renderer);
 		drawable_objects.push_back(chargeroid_test_object);
 
 
 		// MAIN GAME LOOP
 		while (is_Running){
-			handle_input_events();
-			update_game_state();
-			render_current_frame();
+				handle_input_events();
+				update_game_state();
+				render_current_frame();
 		}
 		clean_up();
 
@@ -107,42 +102,45 @@ void Game::handle_input_events(){
 
 				// check which key	 was pressed:
 				switch ( input_event.key.keysym.sym ){
-					case SDLK_UP:
-							{
+						case SDLK_UP:
+						{
 								printf("UP\n");
-								double old_speed = active_player->get_y_velocity();
-								double new_speed = old_speed - active_player->acceleration;
-								active_player->set_y_velocity(new_speed);
+								Velocity speed = active_player->get_velocity();
+								speed.vy -= active_player->acceleration;
+								active_player->set_velocity(speed);
 								break;
-							}
+						}
 					case SDLK_DOWN:
 							{
-								printf("DOWN\n");
-								double old_speed = active_player->get_y_velocity();
-								double new_speed = old_speed + active_player->acceleration;
-								active_player->set_y_velocity(new_speed);
+								printf("UP\n");
+								Velocity speed = active_player->get_velocity();
+								speed.vy += active_player->acceleration;
+								active_player->set_velocity(speed);
 								break;
 							}
 					case SDLK_LEFT:
 							{
 								printf("LEFT\n");
-								double old_speed = active_player->get_x_velocity();
-								double new_speed = old_speed - active_player->acceleration;
-								active_player->set_x_velocity(new_speed);
+								Velocity speed = active_player->get_velocity();
+								speed.vx -= active_player->acceleration;
+								active_player->set_velocity(speed);
 								break;
 							}
 					case SDLK_RIGHT:
 							{
 								printf("RIGHT\n");
-								double old_speed = active_player->get_x_velocity();
-								double new_speed = old_speed + active_player->acceleration;
-								active_player->set_x_velocity(new_speed);
+								Velocity speed = active_player->get_velocity();
+								speed.vx += active_player->acceleration;
+								active_player->set_velocity(speed);
 								break;
 							}
 					case SDLK_a:
-						for (int counter = 0; counter < 2; counter++){
+						for (int counter = 0; counter < 1; counter++){
 								Chargeroid* new_chargeroid;
-								new_chargeroid = new Chargeroid(250., 250., renderer);
+								Position chargeroid_pos;
+								chargeroid_pos.x = 250.;
+								chargeroid_pos.y = 250.;
+								new_chargeroid = new Chargeroid(chargeroid_pos, renderer);
 								drawable_objects.push_back(new_chargeroid);
 								printf("a - add new chargeroid (charge %.2f, mass %.2f) - amount of objects: %i\n",
 								       new_chargeroid->get_charge(),
@@ -153,7 +151,8 @@ void Game::handle_input_events(){
 					case SDLK_o:
 						for (int counter = 0; counter < 2; counter++){
 								DrawableObject* new_object;
-								new_object = new DrawableObject(250., 250., renderer);
+								Position object_position = {250., 250.}; 
+								new_object = new DrawableObject(object_position, renderer);
 								drawable_objects.push_back(new_object);
 								printf("o - add new object - amount of objects: %i\n", (int) drawable_objects.size());
 						}
@@ -219,16 +218,14 @@ void Game::let_all_objects_interact()
 				partner_object++)
 		{
 			// get parameters
-			double obj1_x = (*interacting_object)->get_x();
-			double obj1_y = (*interacting_object)->get_y();
-			double obj2_x = (*partner_object)->get_x();
-			double obj2_y = (*partner_object)->get_y();
+			Position obj1_pos = (*interacting_object)->get_pos();
+			Position obj2_pos = (*partner_object)->get_pos();
 			double obj1_charge = (*interacting_object)->get_charge();
 			double obj2_charge = (*partner_object)->get_charge();
 
 			// calculate resulting vectors
-			double diff_x = obj2_x - obj1_x;
-			double diff_y = obj2_y - obj1_y;
+			double diff_x = obj2_pos.x - obj1_pos.x;
+			double diff_y = obj2_pos.y - obj1_pos.y;
 
 			double distance = sqrt(
 					pow(diff_x, 2)
@@ -249,19 +246,18 @@ void Game::let_all_objects_interact()
 			double force_y = force_magnitude * diff_y / distance;
 			//                                 ^^^^^^^^^^^^^^^^^^
 			//   these are the unit vector components for (1)->(2)
+			Force force = {force_x, force_y};
+
 //			printf("---ddist: %.2f, force_mag: %.2f, fx=%.2f, fy=%.2f\n",
 //			       distance,
 //			       force_magnitude,
 //			       force_x,
 //			       force_y);
 
-
-
 			// apply force to objects
-			(*interacting_object)->apply_x_force(-force_x);
-			(*interacting_object)->apply_y_force(-force_y);
-			(*partner_object)->apply_x_force(force_x);
-			(*partner_object)->apply_y_force(force_y);
+			(*partner_object)->apply_force(force);
+			Force inv_force = {-force.fx, -force.fy};
+			(*interacting_object)->apply_force(inv_force);
 
 		}
 	}
@@ -311,8 +307,10 @@ void Game::update_positions() {
 void Game::apply_friction() {
 	for (list<DrawableObject*>::iterator iter = drawable_objects.begin(); iter != drawable_objects.end(); iter++)
 	{
-		(*iter)->set_x_velocity((*iter)->get_x_velocity() * 0.99);
-		(*iter)->set_y_velocity((*iter)->get_y_velocity() * 0.99);
+			Velocity speed = (*iter)->get_velocity();
+			speed.vx *= 0.99;
+			speed.vy *= 0.99;
+			(*iter)->set_velocity(speed);
 	}
 }
 
@@ -320,26 +318,26 @@ void Game::check_for_border_crossings()
 {
 	for (list<DrawableObject*>::iterator iter = drawable_objects.begin(); iter != drawable_objects.end(); iter++)
 		{
-			double vertical_position = (*iter)->get_y();
-			double horizontal_position = (*iter)->get_x();
+			Position iter_pos = (*iter)->get_pos();
+				
+			if (iter_pos.y < -5)
+			{
+				iter_pos.y = 505;
+			}
+			else if (iter_pos.y > 505)
+			{
+				iter_pos.y = -5;
+			}
 
-			if (vertical_position < -5)
+			if (iter_pos.x <= -5)
 			{
-				(*iter)->set_y(505);
+				iter_pos.x = 505;
 			}
-			else if (vertical_position > 505)
+			else if (iter_pos.x > 505)
 			{
-				(*iter)->set_y(-5);
+				iter_pos.x = -5;
 			}
-
-			if (horizontal_position <= -5)
-			{
-				(*iter)->set_x(505);
-			}
-			else if (horizontal_position > 505)
-			{
-				(*iter)->set_x(-5);
-			}
+			(*iter)->set_position(iter_pos);
 		}
 }
 

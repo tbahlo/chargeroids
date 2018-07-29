@@ -17,8 +17,8 @@ Player::Player(SDL_Renderer* renderer)
 	rotation_speed = 10;
 }
 
-Player::Player(double x, double y, SDL_Renderer* renderer)
-: DrawableObject(x, y, renderer)
+Player::Player(Position pos, SDL_Renderer* renderer)
+: DrawableObject(pos, renderer)
 {
 	mass = 100;
 	character_class = 'P';
@@ -27,8 +27,8 @@ Player::Player(double x, double y, SDL_Renderer* renderer)
 	rotation_speed = 10;
 }
 
-Player::Player(double x, double y, double velocity_x, double velocity_y, SDL_Renderer* renderer)
-: DrawableObject(x, y, velocity_x, velocity_y, renderer)
+Player::Player(Position pos, Velocity vel, SDL_Renderer* renderer)
+: DrawableObject(pos, vel, renderer)
 {
 	character_class = 'P';
 	mass = 100;
@@ -56,18 +56,18 @@ void Player::draw_myself()
 		for (double angle = 0; angle < 360; angle += 360/20)
 		{
 				SDL_RenderDrawLine(renderer, 
-								x_position, 
-								y_position,
-								x_position + radius * cos(angle / 360. * 2 * 3.14159),
-								y_position + radius * sin(angle / 360. * 2 * 3.14159));
+								position.x, 
+								position.y,
+								position.x + radius * cos(angle / 360. * 2 * 3.14159),
+								position.y + radius * sin(angle / 360. * 2 * 3.14159));
 		}
 
 		// draw velocity vector
 		SDL_RenderDrawLine(renderer, 
-						x_position, 
-						y_position,
-						x_position + 100 * x_velocity, 
-						y_position + 100 * y_velocity);
+						position.x, 
+						position.y,
+						position.x + 100 * velocity.vx, 
+						position.y + 100 * velocity.vy);
 
 }
 
