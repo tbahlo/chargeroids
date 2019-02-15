@@ -23,9 +23,11 @@ public:
 
 	void kill() override;
 	void draw_myself() override;
+	void boost();
 
 	double acceleration;
 	double rotation_speed;
+	double orientation_angle;
 };
 
 #endif /* SRC_PLAYER_H_ */

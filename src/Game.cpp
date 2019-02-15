@@ -104,34 +104,25 @@ void Game::handle_input_events(){
 				switch ( input_event.key.keysym.sym ){
 						case SDLK_UP:
 						{
-								printf("UP\n");
-								Velocity speed = active_player->get_velocity();
-								speed.vy -= active_player->acceleration;
-								active_player->set_velocity(speed);
+								active_player->boost();
 								break;
 						}
 					case SDLK_DOWN:
 							{
-								printf("UP\n");
-								Velocity speed = active_player->get_velocity();
-								speed.vy += active_player->acceleration;
-								active_player->set_velocity(speed);
+								printf("DOWN\n");
+								active_player->boost();
 								break;
 							}
 					case SDLK_LEFT:
 							{
 								printf("LEFT\n");
-								Velocity speed = active_player->get_velocity();
-								speed.vx -= active_player->acceleration;
-								active_player->set_velocity(speed);
+								active_player->orientation_angle -= active_player->rotation_speed;
 								break;
 							}
 					case SDLK_RIGHT:
 							{
 								printf("RIGHT\n");
-								Velocity speed = active_player->get_velocity();
-								speed.vx += active_player->acceleration;
-								active_player->set_velocity(speed);
+								active_player->orientation_angle += active_player->rotation_speed;
 								break;
 							}
 					case SDLK_a:
@@ -308,8 +299,8 @@ void Game::apply_friction() {
 	for (list<DrawableObject*>::iterator iter = drawable_objects.begin(); iter != drawable_objects.end(); iter++)
 	{
 			Velocity speed = (*iter)->get_velocity();
-			speed.vx *= 0.99;
-			speed.vy *= 0.99;
+			speed.vx *= 0.999;
+			speed.vy *= 0.999;
 			(*iter)->set_velocity(speed);
 	}
 }
