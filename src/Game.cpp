@@ -96,6 +96,27 @@ void Game::handle_input_events(){
 		if(input_event.type == SDL_QUIT){
 		    is_Running = false;
 		}
+		// User releases a key
+		else if (input_event.type == SDL_KEYUP){
+				printf("Key released: ");
+				switch ( input_event.key.keysym.sym ){
+						case SDLK_UP:
+								{
+										active_player->stop();
+										break;
+								}
+						case SDLK_LEFT:
+								{
+										active_player->rotate(0);
+										break;
+								}
+						case SDLK_RIGHT:
+								{
+										active_player->rotate(0);
+										break;
+								}
+				}
+		}
 		// User presses a key
 		else if (input_event.type == SDL_KEYDOWN){
 				printf("Key pressed: ");
@@ -110,19 +131,19 @@ void Game::handle_input_events(){
 					case SDLK_DOWN:
 							{
 								printf("DOWN\n");
-								active_player->boost();
+								active_player->stop();
 								break;
 							}
 					case SDLK_LEFT:
 							{
 								printf("LEFT\n");
-								active_player->orientation_angle -= active_player->rotation_speed;
+								active_player->rotate(-1);
 								break;
 							}
 					case SDLK_RIGHT:
 							{
 								printf("RIGHT\n");
-								active_player->orientation_angle += active_player->rotation_speed;
+								active_player->rotate(1);
 								break;
 							}
 					case SDLK_a:

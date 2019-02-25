@@ -23,8 +23,13 @@ public:
 
 	void kill() override;
 	void draw_myself() override;
+	void update() override;
 	void boost();
+	void stop();
+	void rotate(int direction);
 
+	bool is_boosting;
+	int rotation_direction;
 	double acceleration;
 	double rotation_speed;
 	double orientation_angle;

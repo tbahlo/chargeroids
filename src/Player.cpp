@@ -5,56 +5,92 @@
  *      Author: thore
  */
 
+#define ROT_SPEED 0.5
+#define ACCEL 0.001
+#define MASS 100
+
+
 #include "Player.h"
 #include <iostream>
 
 Player::Player(SDL_Renderer* renderer)
-: DrawableObject(renderer)
+		: DrawableObject(renderer)
 {
-	character_class = 'P';
-	mass = 100;
-	charge = 1;
-	acceleration = 0.1;
-	rotation_speed = 10;
-	orientation_angle = 45; 
+		character_class = 'P';
+		mass = MASS;
+		charge = 1;
+		acceleration = ACCEL;
+		rotation_speed = ROT_SPEED;
+		orientation_angle = 45;
+		is_boosting = false;
+		rotation_direction = 0;   
 }
 
 Player::Player(Position pos, SDL_Renderer* renderer)
-: DrawableObject(pos, renderer)
+		: DrawableObject(pos, renderer)
 {
-	mass = 100;
-	character_class = 'P';
-	charge = 1;
-	acceleration = 0.1;
-	rotation_speed = 10;
-	orientation_angle = 45; 
+		mass = MASS;
+		character_class = 'P';
+		charge = 1;
+		acceleration = ACCEL;
+		rotation_speed = ROT_SPEED;
+		orientation_angle = 45; 
+		is_boosting = false;
+		rotation_direction = 0;   
 }
 
 Player::Player(Position pos, Velocity vel, SDL_Renderer* renderer)
-: DrawableObject(pos, vel, renderer)
+		: DrawableObject(pos, vel, renderer)
 {
-	character_class = 'P';
-	mass = 100;
-	charge = 1;
-	acceleration = 0.1;
-	rotation_speed = 10;
-	orientation_angle = 45; 
+		character_class = 'P';
+		mass = MASS;
+		charge = 1;
+		acceleration = ACCEL;
+		rotation_speed = ROT_SPEED;
+		orientation_angle = 45; 
+		is_boosting = false;
+		rotation_direction = 0;   
 }
 
 Player::~Player()
 {
-	// TODO Auto-generated destructor stub
+		// TODO Auto-generated destructor stub
 }
 
 void Player::kill()
 {
-	is_alive = false;
+		is_alive = false;
 }
 
 void Player::boost()
 {
-	velocity.vx += acceleration * cos(orientation_angle /360. * 2 * 3.14159);
-	velocity.vy += acceleration * sin(orientation_angle /360. * 2 * 3.14159);
+		is_boosting = true;
+}
+
+void Player::rotate(int direction)
+{
+		rotation_direction = direction;
+}
+
+void Player::stop()
+{
+		is_boosting = false; 
+}
+
+void Player::update()
+{
+		// acceleration:
+		if(is_boosting) {
+				velocity.vx += acceleration * cos(orientation_angle /360. * 2 * 3.14159);
+				velocity.vy += acceleration * sin(orientation_angle /360. * 2 * 3.14159);
+		}
+
+		// rotation
+		orientation_angle += rotation_direction * rotation_speed;
+		
+		//position update:
+		position.x += velocity.vx;
+		position.y += velocity.vy;
 }
 
 void Player::draw_myself()
@@ -76,7 +112,7 @@ void Player::draw_myself()
 						tip_point_y,
 						right_tail_point_x,
 						right_tail_point_y);		
-		
+
 		// top => left
 		SDL_RenderDrawLine(renderer,
 						tip_point_x,
@@ -90,14 +126,14 @@ void Player::draw_myself()
 						position.y,
 						right_tail_point_x,
 						right_tail_point_y);		
-		
+
 		// center => right
 		SDL_RenderDrawLine(renderer,
 						position.x,
 						position.y,
 						left_tail_point_x,
 						left_tail_point_y);		
-		
+
 		// draw velocity vector
 		SDL_RenderDrawLine(renderer, 
 						position.x, 

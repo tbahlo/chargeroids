@@ -25,6 +25,7 @@ chargeroids: main.o Game.o DrawableObject.o Chargeroid.o Player.o types.h
 # clean up - delete all earlier compiled files
 clean:
 	rm -f *.o
+	rm -f chargeroids
  
 run: chargeroids
 	./chargeroids

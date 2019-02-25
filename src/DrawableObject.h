@@ -17,7 +17,7 @@ public:
 
 	virtual void draw_myself();
 	virtual void kill();
-	void update();
+	virtual void update();
 	bool is_dead();
 	bool has_child();
 	virtual DrawableObject* get_child();
