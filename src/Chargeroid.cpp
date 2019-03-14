@@ -42,23 +42,30 @@ void Chargeroid::kill()
 {
 	if (mass > 25)
 	{
-		//TODO implement momentum conservation 
-		//WARNING: FRAGMENTS ARE ON TOP OF EACH OTHER => SHIFT THEM A LITTLE!
-		Chargeroid* first_fragment = new Chargeroid(position, renderer);
-		Chargeroid* second_fragment = new Chargeroid(position, renderer);
-
-		double mass_difference = rand() % int(mass / 2);
-
+		double mass_difference = rand() % int(mass / 4);
 		double first_fragments_mass =  mass / 2 + mass_difference;
-		first_fragment->mass = first_fragments_mass;
-
 		double second_fragments_mass = mass / 2 - mass_difference;
-		second_fragment->mass = second_fragments_mass;
+		
+		Position first_position;
+		first_position.x = position.x + 2 * sqrt(first_fragments_mass);
+		first_position.y = position.y + 2 * sqrt(first_fragments_mass);
 
+		Position second_position;
+		second_position.x = position.x - 2 *  sqrt(second_fragments_mass);
+		second_position.y = position.y - 2 *  sqrt(second_fragments_mass);
+
+		//TODO implement momentum conservation 
+		Velocity first_speed = velocity;
+		Velocity second_speed = velocity;
+
+		Chargeroid* first_fragment = new Chargeroid(first_position, first_speed, renderer);
+		first_fragment->mass = first_fragments_mass;
 		first_fragment->charge = charge/2;
-		second_fragment->charge = charge/2;
-
 		children_objects.push_back(first_fragment);
+
+		Chargeroid* second_fragment = new Chargeroid(second_position, second_speed, renderer);
+		second_fragment->mass = second_fragments_mass;
+		second_fragment->charge = charge/2;
 		children_objects.push_back(second_fragment);
 		printf("objects pushed in child list\n");
 	}
@@ -71,13 +78,20 @@ void Chargeroid::draw_myself()
 
 		// draw "star" shape
 		double radius = sqrt(mass);
-		for (double angle = 0; angle < 360; angle += 360/10)
+		double old_angle = 0;
+		for (double angle = 0; angle <= 360; angle += 360/10)
 		{
 				SDL_RenderDrawLine(renderer, 
 								position.x, 
 								position.y,
 								position.x + radius * cos(angle / 360. * 2 * 3.14159),
 								position.y + radius * sin(angle / 360. * 2 * 3.14159));
+				SDL_RenderDrawLine(renderer, 
+								position.x + radius * cos(angle / 360. * 2 * 3.14159),
+								position.y + radius * sin(angle / 360. * 2 * 3.14159),
+								position.x + radius * cos(old_angle / 360. * 2 * 3.14159),
+								position.y + radius * sin(old_angle / 360. * 2 * 3.14159));
+				old_angle = angle;
 		}
 
 		// draw velocity vector
