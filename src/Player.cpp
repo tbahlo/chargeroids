@@ -77,6 +77,20 @@ void Player::stop()
 		is_boosting = false; 
 }
 
+void Player::shoot(){
+		
+		Position proj_pos;
+		proj_pos.x = position.x + velocity.vx;
+		proj_pos.y = position.y + velocity.vy;
+
+		Velocity proj_speed;
+		proj_speed.vx = 2 * velocity.vx;
+		proj_speed.vy = 2 * velocity.vy;
+		
+		Projectile* new_projectile = new Projectile(proj_pos, proj_speed, renderer);
+		children_objects.push_back(new_projectile);
+}
+
 void Player::update(float time_passed)
 {
 		// acceleration:

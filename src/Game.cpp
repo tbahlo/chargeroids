@@ -161,6 +161,12 @@ void Game::handle_input_events(){
 								active_player->rotate(1);
 								break;
 							}
+					case SDLK_SPACE:
+							{
+								printf("SPACE\n");
+								active_player->shoot();
+								break;
+							}
 					case SDLK_a:
 						for (int counter = 0; counter < 1; counter++){
 								Chargeroid* new_chargeroid;

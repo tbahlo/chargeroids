@@ -15,7 +15,7 @@ CFLAGS = -std=gnu++11 -g -lSDL2 -Wall
 all: chargeroids
 
 
-chargeroids: main.o Game.o DrawableObject.o Chargeroid.o Player.o types.h
+chargeroids: main.o Game.o DrawableObject.o Chargeroid.o Player.o Projectile.o types.h
 	$(CC) -o chargeroids $^ $(CFLAGS)
 
 # create object files from every cpp file you find:

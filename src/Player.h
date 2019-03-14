@@ -10,6 +10,7 @@
 
 #include "types.h"
 #include "DrawableObject.h"
+#include "Projectile.h"
 
 class Player : public DrawableObject
 {
@@ -27,6 +28,7 @@ public:
 	void boost();
 	void stop();
 	void rotate(int direction);
+	void shoot();
 
 	bool is_boosting;
 	int rotation_direction;
