@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "SDL2/SDL.h"
+#include <ctime>
 
 Game::Game() {
 	is_Running = true;
@@ -44,10 +45,16 @@ int Game::start(){
 
 
 		// MAIN GAME LOOP
+		float time_passed = 0.;
+		float last_time_in_s = get_current_time_in_s();
+		float current_time_in_s = get_current_time_in_s();
 		while (is_Running){
+				current_time_in_s = get_current_time_in_s();
+				time_passed = float(current_time_in_s - last_time_in_s);
 				handle_input_events();
-				update_game_state();
+				update_game_state(time_passed);
 				render_current_frame();
+				last_time_in_s = current_time_in_s;
 		}
 		clean_up();
 
@@ -89,6 +96,11 @@ int Game::initialize(){
 
 	return success;
 }
+
+float Game::get_current_time_in_s(){
+	return float(clock()) / float(CLOCKS_PER_SEC);
+}
+
 
 void Game::handle_input_events(){
 	while (SDL_PollEvent(&input_event) != 0){
@@ -198,13 +210,13 @@ void Game::handle_input_events(){
 	}
 }
 
-void Game::update_game_state()
+void Game::update_game_state(float time_passed)
 {
 	let_all_objects_interact();
 	spawn_new_objects();
 	remove_dead_objects();
-	apply_friction();
-	update_positions();
+	//apply_friction();
+	update_positions(time_passed);
 	check_for_border_crossings();
 	//printf("Player speed before: %f\n", active_player->get_y_velocity());
 }
@@ -307,12 +319,12 @@ void Game::remove_dead_objects()
 	}
 }
 
-void Game::update_positions() {
+void Game::update_positions(float time_passed) {
 	for (list<DrawableObject*>::iterator iter = drawable_objects.begin();
 			iter != drawable_objects.end();
 			iter++)
 	{
-		(*iter)->update();
+		(*iter)->update(time_passed);
 	}
 }
 

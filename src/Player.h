@@ -23,7 +23,7 @@ public:
 
 	void kill() override;
 	void draw_myself() override;
-	void update() override;
+	void update(float time_passed) override;
 	void boost();
 	void stop();
 	void rotate(int direction);

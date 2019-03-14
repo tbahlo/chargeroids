@@ -95,7 +95,7 @@ bool DrawableObject::has_child()
 		return children_objects.size() != 0;
 }
 
-void DrawableObject::update()
+void DrawableObject::update(float time_passed)
 {
 		// acceleration:
 		if(force.fx != 0 || force.fy != 0) {
@@ -104,8 +104,8 @@ void DrawableObject::update()
 		}
 
 		//position update:
-		position.x += velocity.vx;
-		position.y += velocity.vy;
+		position.x += velocity.vx * time_passed;
+		position.y += velocity.vy * time_passed;
 }
 
 DrawableObject* DrawableObject::get_child()

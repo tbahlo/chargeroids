@@ -6,13 +6,15 @@
  */
 
 #include "Chargeroid.h"
+#define CHARGE 10
+
 
 Chargeroid::Chargeroid(SDL_Renderer* renderer)
 : DrawableObject(renderer)
 {
 	character_class = 'C';
 	mass = rand()%90 + 10;
-	charge = 5;
+	charge = CHARGE;
 }
 
 Chargeroid::Chargeroid(Position pos, SDL_Renderer* renderer)
@@ -20,7 +22,7 @@ Chargeroid::Chargeroid(Position pos, SDL_Renderer* renderer)
 {
 	mass = rand()%90 + 10;
 	character_class = 'C';
-	charge = 5;
+	charge = CHARGE;
 }
 
 Chargeroid::Chargeroid(Position pos, Velocity vel, SDL_Renderer* renderer)
@@ -28,7 +30,7 @@ Chargeroid::Chargeroid(Position pos, Velocity vel, SDL_Renderer* renderer)
 {
 	character_class = 'C';
 	mass = rand()%90 + 10;
-	charge = 5;
+	charge = CHARGE;
 }
 
 Chargeroid::~Chargeroid()
@@ -82,8 +84,8 @@ void Chargeroid::draw_myself()
 		SDL_RenderDrawLine(renderer, 
 						position.x, 
 						position.y,
-						position.x + 100 * velocity.vx, 
-						position.y + 100 * velocity.vy);
+						position.x + velocity.vx, 
+						position.y + velocity.vy);
 
 
 }

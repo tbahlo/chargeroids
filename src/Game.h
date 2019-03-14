@@ -9,6 +9,7 @@
 #define SRC_GAME_H_
 #include <SDL2/SDL.h>
 #include <list>
+#include <ctime>
 #include "types.h"
 #include "DrawableObject.h"
 #include "Chargeroid.h"
@@ -17,40 +18,42 @@
 using namespace std;
 
 class Game {
-public:
-	Game();
-	virtual ~Game();
+		public:
+				Game();
+				virtual ~Game();
 
-	/*
-	 * starts the game
-	 */
-	int start();
+				/*
+				 * starts the game
+				 */
+				int start();
 
-private:
-	bool is_Running;
-	int initialize();
-	SDL_Window* game_window;
-	SDL_Surface* screen_surface;
-	SDL_Surface* testbild;
-	SDL_Event input_event;
-	SDL_Renderer* renderer;
-	list<DrawableObject*> drawable_objects;
-	Player* active_player;
+		private:
+				bool is_Running;
+				int initialize();
+				SDL_Window* game_window;
+				SDL_Surface* screen_surface;
+				SDL_Surface* testbild;
+				SDL_Event input_event;
+				SDL_Renderer* renderer;
+				list<DrawableObject*> drawable_objects;
+				Player* active_player;
 
 
-	void handle_input_events();
+				void handle_input_events();
 
-	void update_game_state();
-		void let_all_objects_interact();
-		void spawn_new_objects();
-		void remove_dead_objects();
-		void apply_friction()	;
-		void update_positions();
-		void check_for_border_crossings();
+				float get_current_time_in_s();
+				void update_game_state(float time_passed);
 
-	void render_current_frame();
+				void let_all_objects_interact();
+				void spawn_new_objects();
+				void remove_dead_objects();
+				void apply_friction()	;
+				void update_positions(float time_passed);
+				void check_for_border_crossings();
 
-	void clean_up();
+				void render_current_frame();
+
+				void clean_up();
 
 
 

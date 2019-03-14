@@ -5,8 +5,8 @@
  *      Author: thore
  */
 
-#define ROT_SPEED 0.5
-#define ACCEL 0.001
+#define ROT_SPEED 360		// degree per second
+#define ACCEL 500 			// pixel per second
 #define MASS 100
 
 
@@ -77,20 +77,20 @@ void Player::stop()
 		is_boosting = false; 
 }
 
-void Player::update()
+void Player::update(float time_passed)
 {
 		// acceleration:
 		if(is_boosting) {
-				velocity.vx += acceleration * cos(orientation_angle /360. * 2 * 3.14159);
-				velocity.vy += acceleration * sin(orientation_angle /360. * 2 * 3.14159);
+				velocity.vx += acceleration * time_passed * cos(orientation_angle /360. * 2 * 3.14159);
+				velocity.vy += acceleration * time_passed * sin(orientation_angle /360. * 2 * 3.14159);
 		}
 
 		// rotation
-		orientation_angle += rotation_direction * rotation_speed;
+		orientation_angle += rotation_direction * rotation_speed * time_passed;
 		
 		//position update:
-		position.x += velocity.vx;
-		position.y += velocity.vy;
+		position.x += velocity.vx * time_passed;
+		position.y += velocity.vy * time_passed;
 }
 
 void Player::draw_myself()
@@ -138,8 +138,8 @@ void Player::draw_myself()
 		SDL_RenderDrawLine(renderer, 
 						position.x, 
 						position.y,
-						position.x + 100 * velocity.vx, 
-						position.y + 100 * velocity.vy);
+						position.x + velocity.vx, 
+						position.y + velocity.vy);
 
 }
 
