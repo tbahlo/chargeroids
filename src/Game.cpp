@@ -24,7 +24,6 @@ int Game::start(){
 		return 1;
 	}
 	else {
-		DrawableObject* first_test_object;
 
 		printf("Creating a Player...\n");
 		Position player_pos;
@@ -35,13 +34,17 @@ int Game::start(){
 		drawable_objects.push_back(player);
 		active_player = player;
 
-		printf("Creating 1. object...\n");
-		first_test_object = new DrawableObject(renderer);
-		drawable_objects.push_back(first_test_object);
+		//printf("Creating 1. object...\n");
+		//DrawableObject* first_test_object;
+		//first_test_object = new DrawableObject(renderer);
+		//drawable_objects.push_back(first_test_object);
 
 		printf("Creating a chargeroid...\n");
 		Chargeroid* chargeroid_test_object = new Chargeroid(renderer);
 		drawable_objects.push_back(chargeroid_test_object);
+		printf("Creating a second chargeroid...\n");
+		Chargeroid* chargeroid_test_object2 = new Chargeroid(renderer);
+		drawable_objects.push_back(chargeroid_test_object2);
 
 
 		// MAIN GAME LOOP
@@ -257,31 +260,25 @@ void Game::let_all_objects_interact()
 			// lower cap for distance to avoid division-by-(nearly)zero problems
 			if (distance < 1) distance = 1;
 
+			// calculate charge-force
 			double force_magnitude = obj1_charge * obj2_charge / pow(distance, 2);
-//			printf("obj1: x=%.2f, y=%.2f, charge=%.2f|| obj2: x=%.2f, y=%.2f, charge=%.2f\n",
-//			       obj1_x,
-//			       obj1_y,
-//			       obj1_charge,
-//			       obj2_x,
-//			       obj2_y,
-//			       obj2_charge);
-			force_magnitude *= 0.01;
 			double force_x = force_magnitude * diff_x / distance;
 			double force_y = force_magnitude * diff_y / distance;
 			//                                 ^^^^^^^^^^^^^^^^^^
 			//   these are the unit vector components for (1)->(2)
 			Force force = {force_x, force_y};
 
-//			printf("---ddist: %.2f, force_mag: %.2f, fx=%.2f, fy=%.2f\n",
-//			       distance,
-//			       force_magnitude,
-//			       force_x,
-//			       force_y);
-
 			// apply force to objects
 			(*partner_object)->apply_force(force);
 			Force inv_force = {-force.fx, -force.fy};
 			(*interacting_object)->apply_force(inv_force);
+
+			// Collision detection - kill both if they collide:
+			//if (distance <= (*interacting_object)->get_mass() + (*partner_object)->get_mass()) {
+			if (distance <= 20) {
+				(*interacting_object)->kill();
+				(*partner_object)->kill();
+			}
 
 		}
 	}
