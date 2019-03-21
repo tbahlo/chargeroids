@@ -17,7 +17,7 @@ Chargeroid::Chargeroid(SDL_Renderer* renderer)
 	charge = CHARGE;
 }
 
-Chargeroid::Chargeroid(Position pos, SDL_Renderer* renderer)
+Chargeroid::Chargeroid(Vector2D pos, SDL_Renderer* renderer)
 : DrawableObject(pos, renderer)
 {
 	mass = rand()%90 + 10;
@@ -25,7 +25,7 @@ Chargeroid::Chargeroid(Position pos, SDL_Renderer* renderer)
 	charge = CHARGE;
 }
 
-Chargeroid::Chargeroid(Position pos, Velocity vel, SDL_Renderer* renderer)
+Chargeroid::Chargeroid(Vector2D pos, Vector2D vel, SDL_Renderer* renderer)
 : DrawableObject(pos, vel, renderer)
 {
 	character_class = 'C';
@@ -46,17 +46,17 @@ void Chargeroid::kill()
 		double first_fragments_mass =  mass / 2 + mass_difference;
 		double second_fragments_mass = mass / 2 - mass_difference;
 		
-		Position first_position;
+		Vector2D first_position;
 		first_position.x = position.x + 2 * sqrt(first_fragments_mass);
 		first_position.y = position.y + 2 * sqrt(first_fragments_mass);
 
-		Position second_position;
+		Vector2D second_position;
 		second_position.x = position.x - 2 *  sqrt(second_fragments_mass);
 		second_position.y = position.y - 2 *  sqrt(second_fragments_mass);
 
 		//TODO implement momentum conservation 
-		Velocity first_speed = velocity;
-		Velocity second_speed = velocity;
+		Vector2D first_speed = velocity;
+		Vector2D second_speed = velocity;
 
 		Chargeroid* first_fragment = new Chargeroid(first_position, first_speed, renderer);
 		first_fragment->mass = first_fragments_mass;
@@ -95,19 +95,19 @@ void Chargeroid::draw_myself()
 		}
 
 		// draw velocity vector
-		SDL_RenderDrawLine(renderer, 
-						position.x, 
-						position.y,
-						position.x + velocity.vx, 
-						position.y + velocity.vy);
+		//SDL_RenderDrawLine(renderer, 
+		//				position.x, 
+		//				position.y,
+		//				position.x + velocity.x, 
+		//				position.y + velocity.y);
 
 
 }
 
-void Chargeroid::apply_force(Force ext_force)
+void Chargeroid::apply_force(Vector2D ext_force)
 {
-	this->force.fx += ext_force.fx;
-	this->force.fy += ext_force.fy;
+	this->force.x += ext_force.x;
+	this->force.y += ext_force.y;
 }
 
 double Chargeroid::calculate_distance_to(Chargeroid* opponent)

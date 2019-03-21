@@ -26,7 +26,7 @@ Player::Player(SDL_Renderer* renderer)
 		rotation_direction = 0;   
 }
 
-Player::Player(Position pos, SDL_Renderer* renderer)
+Player::Player(Vector2D pos, SDL_Renderer* renderer)
 		: DrawableObject(pos, renderer)
 {
 		mass = MASS;
@@ -39,7 +39,7 @@ Player::Player(Position pos, SDL_Renderer* renderer)
 		rotation_direction = 0;   
 }
 
-Player::Player(Position pos, Velocity vel, SDL_Renderer* renderer)
+Player::Player(Vector2D pos, Vector2D vel, SDL_Renderer* renderer)
 		: DrawableObject(pos, vel, renderer)
 {
 		character_class = 'P';
@@ -79,13 +79,13 @@ void Player::stop()
 
 void Player::shoot(){
 		
-		Position proj_pos;
-		proj_pos.x = position.x + velocity.vx;
-		proj_pos.y = position.y + velocity.vy;
+		Vector2D proj_pos;
+		proj_pos.x = position.x + velocity.x;
+		proj_pos.y = position.y + velocity.y;
 
-		Velocity proj_speed;
-		proj_speed.vx = 2 * velocity.vx;
-		proj_speed.vy = 2 * velocity.vy;
+		Vector2D proj_speed;
+		proj_speed.x = 2 * velocity.x;
+		proj_speed.y = 2 * velocity.y;
 		
 		Projectile* new_projectile = new Projectile(proj_pos, proj_speed, renderer);
 		children_objects.push_back(new_projectile);
@@ -95,16 +95,16 @@ void Player::update(float time_passed)
 {
 		// acceleration:
 		if(is_boosting) {
-				velocity.vx += acceleration * time_passed * cos(orientation_angle /360. * 2 * 3.14159);
-				velocity.vy += acceleration * time_passed * sin(orientation_angle /360. * 2 * 3.14159);
+				velocity.x += acceleration * time_passed * cos(orientation_angle /360. * 2 * 3.14159);
+				velocity.y += acceleration * time_passed * sin(orientation_angle /360. * 2 * 3.14159);
 		}
 
 		// rotation
 		orientation_angle += rotation_direction * rotation_speed * time_passed;
 		
 		//position update:
-		position.x += velocity.vx * time_passed;
-		position.y += velocity.vy * time_passed;
+		position.x += velocity.x * time_passed;
+		position.y += velocity.y * time_passed;
 }
 
 void Player::draw_myself()
@@ -149,11 +149,11 @@ void Player::draw_myself()
 						left_tail_point_y);		
 
 		// draw velocity vector
-		SDL_RenderDrawLine(renderer, 
-						position.x, 
-						position.y,
-						position.x + velocity.vx, 
-						position.y + velocity.vy);
+		//SDL_RenderDrawLine(renderer, 
+		//				position.x, 
+		//				position.y,
+		//				position.x + velocity.x, 
+		//				position.y + velocity.y);
 
 }
 

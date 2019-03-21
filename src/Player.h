@@ -8,7 +8,6 @@
 #ifndef SRC_PLAYER_H_
 #define SRC_PLAYER_H_
 
-#include "types.h"
 #include "DrawableObject.h"
 #include "Projectile.h"
 
@@ -16,8 +15,8 @@ class Player : public DrawableObject
 {
 public:
 	Player(SDL_Renderer* renderer);
-	Player(Position pos, SDL_Renderer* renderer);
-	Player(Position pos, Velocity vel, SDL_Renderer* renderer);
+	Player(Vector2D pos, SDL_Renderer* renderer);
+	Player(Vector2D pos, Vector2D vel, SDL_Renderer* renderer);
 
 	virtual
 	~Player();

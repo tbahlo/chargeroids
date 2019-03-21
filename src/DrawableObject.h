@@ -2,15 +2,15 @@
 #define SRC_DRAWABLEOBJECT_H_
 #include <SDL2/SDL.h>
 #include <list>
-#include "types.h"
+#include "Vector2D.h"
 
 using namespace std;
 
 class DrawableObject
 {
 public:
-	DrawableObject(Position position, Velocity velocity, SDL_Renderer* given_renderer);
-	DrawableObject(Position position, SDL_Renderer* given_renderer);
+	DrawableObject(Vector2D position, Vector2D velocity, SDL_Renderer* given_renderer);
+	DrawableObject(Vector2D position, SDL_Renderer* given_renderer);
 	DrawableObject(SDL_Renderer* given_renderer);
 	virtual
 	~DrawableObject ();
@@ -24,15 +24,15 @@ public:
 
 	char character_class;
 
-	Position get_pos();
-	Velocity get_velocity();
+	Vector2D get_pos();
+	Vector2D get_velocity();
 	double get_mass();
 	double get_charge();
 
 
-	void set_position(Position position);
-	void set_velocity(Velocity velocity);
-	virtual void apply_force(Force force);	
+	void set_position(Vector2D position);
+	void set_velocity(Vector2D velocity);
+	virtual void apply_force(Vector2D force);	
 
 protected:
 	SDL_Renderer* renderer;
@@ -41,9 +41,9 @@ protected:
 	double charge;
 	list<DrawableObject*> children_objects;
 
-	Position position;
-	Velocity velocity;
-	Force force;
+	Vector2D position;
+	Vector2D velocity;
+	Vector2D force;
 };
 
 #endif /* SRC_DRAWABLEOBJECT_H_ */

@@ -9,8 +9,8 @@
 #include <SDL2/SDL.h>
 
 DrawableObject::DrawableObject(
-				Position given_position,
-				Velocity given_velocity,
+				Vector2D given_position,
+				Vector2D given_velocity,
 				SDL_Renderer* given_renderer)
 {
 		is_alive = true;
@@ -26,11 +26,11 @@ DrawableObject::DrawableObject(
 
 		renderer = given_renderer;
 
-		printf("created object at (%.0f, %.0f) with speed: (%.2f, %.2f)\n", position.x, position.y, velocity.vx, velocity.vy);
+		printf("created object at (%.0f, %.0f) with speed: (%.2f, %.2f)\n", position.x, position.y, velocity.x, velocity.y);
 }
 
 DrawableObject::DrawableObject(
-				Position given_position, 
+				Vector2D given_position, 
 				SDL_Renderer* given_renderer)
 {
 		is_alive = true;
@@ -40,14 +40,14 @@ DrawableObject::DrawableObject(
 
 		position = given_position;
 
-		velocity.vx = double((rand()%200 - rand()%200)) / 100;
-		velocity.vy = double((rand()%200 - rand()%200)) / 100;
+		velocity.x = double((rand()%200 - rand()%200)) / 100;
+		velocity.y = double((rand()%200 - rand()%200)) / 100;
 
-		force.fx = 0;
-		force.fy = 0;
+		force.x = 0;
+		force.y = 0;
 
 		renderer = given_renderer;
-		printf("created object at (%.0f, %.0f) with speed: (%.2f, %.2f)\n", position.x, position.y, velocity.vx, velocity.vy);
+		printf("created object at (%.0f, %.0f) with speed: (%.2f, %.2f)\n", position.x, position.y, velocity.x, velocity.y);
 }
 
 DrawableObject::DrawableObject(SDL_Renderer* given_renderer)
@@ -58,14 +58,14 @@ DrawableObject::DrawableObject(SDL_Renderer* given_renderer)
 		charge = 0;
 		position.x = 100.;
 		position.y = 100.;
-		velocity.vx = 0.;
-		velocity.vy = 0.;
-		force.fx = 0;
-		force.fy = 0;
+		velocity.x = 0.;
+		velocity.y = 0.;
+		force.x = 0;
+		force.y = 0;
 
 
 		renderer = given_renderer;
-		printf("created std object at (%.0f, %.0f) with speed: (%.2f, %.2f)\n", position.x, position.y, velocity.vx, velocity.vy);
+		printf("created std object at (%.0f, %.0f) with speed: (%.2f, %.2f)\n", position.x, position.y, velocity.x, velocity.y);
 
 }
 
@@ -74,7 +74,7 @@ DrawableObject::~DrawableObject ()
 		renderer = NULL;
 }
 
-void DrawableObject::apply_force(Force given_force)
+void DrawableObject::apply_force(Vector2D given_force)
 {
 }
 
@@ -98,14 +98,14 @@ bool DrawableObject::has_child()
 void DrawableObject::update(float time_passed)
 {
 		// acceleration:
-		if(force.fx != 0 || force.fy != 0) {
-				velocity.vx += force.fx / mass;
-				velocity.vy += force.fy / mass;
+		if(force.x != 0 || force.y != 0) {
+				velocity.x += force.x / mass;
+				velocity.y += force.y / mass;
 		}
 
 		//position update:
-		position.x += velocity.vx * time_passed;
-		position.y += velocity.vy * time_passed;
+		position.x += velocity.x * time_passed;
+		position.y += velocity.y * time_passed;
 }
 
 DrawableObject* DrawableObject::get_child()
@@ -141,22 +141,22 @@ double DrawableObject::get_mass()
 		return mass;
 }
 
-Position DrawableObject::get_pos()
+Vector2D DrawableObject::get_pos()
 {
 		return position;
 }
 
-Velocity DrawableObject::get_velocity()
+Vector2D DrawableObject::get_velocity()
 {
 		return velocity;
 }
 
-void DrawableObject::set_position(Position pos)
+void DrawableObject::set_position(Vector2D pos)
 {
 		position = pos;
 }
 
-void DrawableObject::set_velocity(Velocity vel){
+void DrawableObject::set_velocity(Vector2D vel){
 		velocity = vel;
 }
 

@@ -19,7 +19,7 @@ Projectile::Projectile(SDL_Renderer* renderer)
 	lifetime_left = MAX_AGE;
 }
 
-Projectile::Projectile(Position pos, SDL_Renderer* renderer)
+Projectile::Projectile(Vector2D pos, SDL_Renderer* renderer)
 : DrawableObject(pos, renderer)
 {
 	mass = rand()%90 + 10;
@@ -28,7 +28,7 @@ Projectile::Projectile(Position pos, SDL_Renderer* renderer)
 	lifetime_left = MAX_AGE;
 }
 
-Projectile::Projectile(Position pos, Velocity vel, SDL_Renderer* renderer)
+Projectile::Projectile(Vector2D pos, Vector2D vel, SDL_Renderer* renderer)
 : DrawableObject(pos, vel, renderer)
 {
 	character_class = 'C';
@@ -49,14 +49,14 @@ void Projectile::kill()
 
 void Projectile::update(float time_passed){
 		// acceleration:
-		if(force.fx != 0 || force.fy != 0) {
-				velocity.vx += force.fx / mass;
-				velocity.vy += force.fy / mass;
+		if(force.x != 0 || force.y != 0) {
+				velocity.x += force.x / mass;
+				velocity.y += force.y / mass;
 		}
 
 		//position update:
-		position.x += velocity.vx * time_passed;
-		position.y += velocity.vy * time_passed;
+		position.x += velocity.x * time_passed;
+		position.y += velocity.y * time_passed;
 		lifetime_left -= time_passed;
 		if (lifetime_left < 0){
 			is_alive = false;
@@ -78,18 +78,18 @@ void Projectile::draw_myself()
 		}
 
 		// draw velocity vector
-		SDL_RenderDrawLine(renderer, 
-						position.x, 
-						position.y,
-						position.x + velocity.vx, 
-						position.y + velocity.vy);
+		//SDL_RenderDrawLine(renderer, 
+		//				position.x, 
+		//				position.y,
+		//				position.x + velocity.x, 
+		//				position.y + velocity.y);
 
 
 }
 
-void Projectile::apply_force(Force ext_force)
+void Projectile::apply_force(Vector2D ext_force)
 {
-	this->force.fx += ext_force.fx;
-	this->force.fy += ext_force.fy;
+	this->force.x += ext_force.x;
+	this->force.y += ext_force.y;
 }
 

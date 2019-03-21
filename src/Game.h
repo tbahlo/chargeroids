@@ -10,10 +10,10 @@
 #include <SDL2/SDL.h>
 #include <list>
 #include <ctime>
-#include "types.h"
 #include "DrawableObject.h"
 #include "Chargeroid.h"
 #include "Player.h"
+#include "Vector2D.h"
 
 using namespace std;
 

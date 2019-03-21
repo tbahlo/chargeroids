@@ -26,7 +26,7 @@ int Game::start(){
 	else {
 
 		printf("Creating a Player...\n");
-		Position player_pos;
+		Vector2D player_pos;
 		player_pos.x = 300;
 		player_pos.y = 300;
 		Player* player = new Player(renderer);
@@ -170,7 +170,7 @@ void Game::handle_input_events(){
 					case SDLK_a:
 						for (int counter = 0; counter < 1; counter++){
 								Chargeroid* new_chargeroid;
-								Position chargeroid_pos;
+								Vector2D chargeroid_pos;
 								chargeroid_pos.x = 250.;
 								chargeroid_pos.y = 250.;
 								new_chargeroid = new Chargeroid(chargeroid_pos, renderer);
@@ -184,7 +184,7 @@ void Game::handle_input_events(){
 					case SDLK_o:
 						for (int counter = 0; counter < 2; counter++){
 								DrawableObject* new_object;
-								Position object_position = {250., 250.}; 
+								Vector2D object_position = {250., 250.}; 
 								new_object = new DrawableObject(object_position, renderer);
 								drawable_objects.push_back(new_object);
 								printf("o - add new object - amount of objects: %i\n", (int) drawable_objects.size());
@@ -251,8 +251,8 @@ void Game::let_all_objects_interact()
 				partner_object++)
 		{
 			// get parameters
-			Position obj1_pos = (*interacting_object)->get_pos();
-			Position obj2_pos = (*partner_object)->get_pos();
+			Vector2D obj1_pos = (*interacting_object)->get_pos();
+			Vector2D obj2_pos = (*partner_object)->get_pos();
 			double obj1_charge = (*interacting_object)->get_charge();
 			double obj2_charge = (*partner_object)->get_charge();
 
@@ -272,11 +272,11 @@ void Game::let_all_objects_interact()
 			double force_y = force_magnitude * diff_y / distance;
 			//                                 ^^^^^^^^^^^^^^^^^^
 			//   these are the unit vector components for (1)->(2)
-			Force force = {force_x, force_y};
+			Vector2D force = {force_x, force_y};
 
 			// apply force to objects
 			(*partner_object)->apply_force(force);
-			Force inv_force = {-force.fx, -force.fy};
+			Vector2D inv_force = Vector2D(-force.x, -force.y);
 			(*interacting_object)->apply_force(inv_force);
 
 			// Collision detection - kill both if they collide:
@@ -334,9 +334,9 @@ void Game::update_positions(float time_passed) {
 void Game::apply_friction() {
 	for (list<DrawableObject*>::iterator iter = drawable_objects.begin(); iter != drawable_objects.end(); iter++)
 	{
-			Velocity speed = (*iter)->get_velocity();
-			speed.vx *= 0.999;
-			speed.vy *= 0.999;
+			Vector2D speed = (*iter)->get_velocity();
+			speed.x *= 0.999;
+			speed.y *= 0.999;
 			(*iter)->set_velocity(speed);
 	}
 }
@@ -345,7 +345,7 @@ void Game::check_for_border_crossings()
 {
 	for (list<DrawableObject*>::iterator iter = drawable_objects.begin(); iter != drawable_objects.end(); iter++)
 		{
-			Position iter_pos = (*iter)->get_pos();
+			Vector2D iter_pos = (*iter)->get_pos();
 				
 			if (iter_pos.y < -5)
 			{
