@@ -29,7 +29,7 @@ class Game {
 
 		private:
 				bool is_Running;
-				int initialize();
+				bool initialize();
 				SDL_Window* game_window;
 				SDL_Surface* screen_surface;
 				SDL_Surface* testbild;
@@ -47,7 +47,7 @@ class Game {
 				void let_all_objects_interact();
 				void spawn_new_objects();
 				void remove_dead_objects();
-				void apply_friction()	;
+				void apply_friction();
 				void update_positions(float time_passed);
 				void check_for_border_crossings();
 

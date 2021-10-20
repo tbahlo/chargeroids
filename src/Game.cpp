@@ -1,6 +1,13 @@
 #include "Game.h"
 #include "SDL2/SDL.h"
 #include <ctime>
+#include <stdlib.h>
+
+#define C_WORLD_SIZE_X 1000
+#define C_WORLD_SIZE_Y 1000
+#define C_TOLERANCE 5
+#define C_FRICTION_LOSS_IN_PERC 0.1
+
 
 Game::Game() {
 	is_Running = true;
@@ -27,8 +34,8 @@ int Game::start(){
 
 		printf("Creating a Player...\n");
 		Vector2D player_pos;
-		player_pos.x = 300;
-		player_pos.y = 300;
+		player_pos.x = C_WORLD_SIZE_X / 2.;
+		player_pos.y = C_WORLD_SIZE_Y / 2.;
 		Player* player = new Player(renderer);
 		player->set_position(player_pos);
 		drawable_objects.push_back(player);
@@ -51,13 +58,35 @@ int Game::start(){
 		float time_passed = 0.;
 		float last_time_in_s = get_current_time_in_s();
 		float current_time_in_s = get_current_time_in_s();
+		float last_dbg_msg_time_in_s = get_current_time_in_s();
+		float dbg_msg_delay = 1;
 		while (is_Running){
 				current_time_in_s = get_current_time_in_s();
-				time_passed = float(current_time_in_s - last_time_in_s);
-				handle_input_events();
-				update_game_state(time_passed);
-				render_current_frame();
-				last_time_in_s = current_time_in_s;
+				time_passed = (current_time_in_s - last_time_in_s);
+				if (time_passed > 1./60.) // framerate limit
+				{
+					handle_input_events();
+					update_game_state(time_passed);
+					render_current_frame();
+					last_time_in_s = current_time_in_s;
+					if ((current_time_in_s - last_dbg_msg_time_in_s) > dbg_msg_delay)
+					{
+						printf("[%.2f] FPS: %f \nDrawable_objects list: \n", 1./time_passed, current_time_in_s);
+						for (list<DrawableObject*>::iterator current_object = drawable_objects.begin();
+								current_object != drawable_objects.end();
+								current_object++)
+						{
+							printf("%c[ m= %2.1f | q= %2.1f | pos= (%3.1f;%3.1f) ]\n",
+									(*current_object)->character_class,
+									(*current_object)->get_mass(),
+									(*current_object)->get_charge(),
+									(*current_object)->get_pos().x,
+									(*current_object)->get_pos().y);
+						};
+						last_dbg_msg_time_in_s = current_time_in_s;
+						printf("\n");
+					}
+				}
 		}
 		clean_up();
 
@@ -65,7 +94,10 @@ int Game::start(){
 	}
 }
 
-int Game::initialize(){
+/**
+ *  \brief Inititalisiert die SDL Engine und erzeugt ein Fenster
+ */
+bool Game::initialize(){
 	// initialisiere SDL (gfx engine):
 	bool success = false;
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -77,8 +109,8 @@ int Game::initialize(){
 				"chargeroids v0.0",
 				SDL_WINDOWPOS_UNDEFINED,
 				SDL_WINDOWPOS_UNDEFINED,
-				500,
-				500,
+				C_WORLD_SIZE_X,
+				C_WORLD_SIZE_Y,
 				SDL_WINDOW_SHOWN);
 		if (game_window == NULL) {
 			printf("Window could not be created! SDL_Error: %s,\n", SDL_GetError());
@@ -113,7 +145,7 @@ void Game::handle_input_events(){
 		}
 		// User releases a key
 		else if (input_event.type == SDL_KEYUP){
-				printf("Key released: ");
+				//printf("Key released: ");
 				switch ( input_event.key.keysym.sym ){
 						case SDLK_UP:
 								{
@@ -134,7 +166,7 @@ void Game::handle_input_events(){
 		}
 		// User presses a key
 		else if (input_event.type == SDL_KEYDOWN){
-				printf("Key pressed: ");
+				//printf("Key pressed: ");
 
 				// check which key	 was pressed:
 				switch ( input_event.key.keysym.sym ){
@@ -145,25 +177,25 @@ void Game::handle_input_events(){
 						}
 					case SDLK_DOWN:
 							{
-								printf("DOWN\n");
+								//printf("DOWN\n");
 								active_player->stop();
 								break;
 							}
 					case SDLK_LEFT:
 							{
-								printf("LEFT\n");
+								//printf("LEFT\n");
 								active_player->rotate(-1);
 								break;
 							}
 					case SDLK_RIGHT:
 							{
-								printf("RIGHT\n");
+								//printf("RIGHT\n");
 								active_player->rotate(1);
 								break;
 							}
 					case SDLK_SPACE:
 							{
-								printf("SPACE\n");
+								//printf("SPACE\n");
 								active_player->shoot();
 								break;
 							}
@@ -171,14 +203,14 @@ void Game::handle_input_events(){
 						for (int counter = 0; counter < 1; counter++){
 								Chargeroid* new_chargeroid;
 								Vector2D chargeroid_pos;
-								chargeroid_pos.x = 250.;
-								chargeroid_pos.y = 250.;
+								chargeroid_pos.x = rand() % C_WORLD_SIZE_X;
+								chargeroid_pos.y = rand() % C_WORLD_SIZE_X;
 								new_chargeroid = new Chargeroid(chargeroid_pos, renderer);
 								drawable_objects.push_back(new_chargeroid);
-								printf("a - add new chargeroid (charge %.2f, mass %.2f) - amount of objects: %i\n",
+								/*printf("a - add new chargeroid (charge %.2f, mass %.2f) - amount of objects: %i\n",
 								       new_chargeroid->get_charge(),
 								       new_chargeroid->get_mass(),
-								       (int) drawable_objects.size());
+								       (int) drawable_objects.size());*/
 						}
 						break;
 					case SDLK_o:
@@ -187,33 +219,34 @@ void Game::handle_input_events(){
 								Vector2D object_position = {250., 250.}; 
 								new_object = new DrawableObject(object_position, renderer);
 								drawable_objects.push_back(new_object);
-								printf("o - add new object - amount of objects: %i\n", (int) drawable_objects.size());
+								//printf("o - add new object - amount of objects: %i\n", (int) drawable_objects.size());
 						}
 						break;
 					case SDLK_d:
 						if(drawable_objects.size() > 0) drawable_objects.pop_back();
-						printf("d - kill youngest object  - amount of objects: %i\n", (int) drawable_objects.size());
+						//printf("d - kill youngest object  - amount of objects: %i\n", (int) drawable_objects.size());
 						break;
 					case SDLK_k:
 						if(drawable_objects.size() > 0) drawable_objects.front()->kill();
-						printf("k - marked oldest object as dead  - amount of objects: %i\n", (int) drawable_objects.size());
+						//printf("k - marked oldest object as dead  - amount of objects: %i\n", (int) drawable_objects.size());
 						break;
 					case SDLK_i:
-						printf("i - printing informations of every object\n");
+						//printf("i - printing informations of every object\n");
 						for (list<DrawableObject*>::iterator current_object = drawable_objects.begin();
 								current_object != drawable_objects.end();
 								current_object++)
 							{
-								printf("%c: m=%.0f q=%.2f \n", (*current_object)->character_class, (*current_object)->get_mass(), (*current_object)->get_charge());
+								//printf("%c: m=%.0f q=%.2f \n", (*current_object)->character_class, (*current_object)->get_mass(), (*current_object)->get_charge());
 							}
 						break;
 
 					case SDLK_q:
-						printf("q - quitting \n");
+						//printf("q - quitting \n");
 						is_Running = false;
 						break;
 					default:
-						printf("Unknown\n");
+						//printf("Unknown\n");
+						break;
 				}
 		}
 	}
@@ -224,7 +257,7 @@ void Game::update_game_state(float time_passed)
 	let_all_objects_interact();
 	spawn_new_objects();
 	remove_dead_objects();
-	//apply_friction();
+	apply_friction();
 	update_positions(time_passed);
 	check_for_border_crossings();
 	//printf("Player speed before: %f\n", active_player->get_y_velocity());
@@ -335,8 +368,8 @@ void Game::apply_friction() {
 	for (list<DrawableObject*>::iterator iter = drawable_objects.begin(); iter != drawable_objects.end(); iter++)
 	{
 			Vector2D speed = (*iter)->get_velocity();
-			speed.x *= 0.999;
-			speed.y *= 0.999;
+			speed.x *= (100. - C_FRICTION_LOSS_IN_PERC) / 100.;
+			speed.y *= (100. - C_FRICTION_LOSS_IN_PERC) / 100.;
 			(*iter)->set_velocity(speed);
 	}
 }
@@ -347,22 +380,22 @@ void Game::check_for_border_crossings()
 		{
 			Vector2D iter_pos = (*iter)->get_pos();
 				
-			if (iter_pos.y < -5)
+			if (iter_pos.y < -C_TOLERANCE)
 			{
-				iter_pos.y = 505;
+				iter_pos.y += C_WORLD_SIZE_Y;
 			}
-			else if (iter_pos.y > 505)
+			else if (iter_pos.y > C_WORLD_SIZE_X + C_TOLERANCE)
 			{
-				iter_pos.y = -5;
+				iter_pos.y -= C_WORLD_SIZE_Y;
 			}
 
-			if (iter_pos.x <= -5)
+			if (iter_pos.x < -C_TOLERANCE)
 			{
-				iter_pos.x = 505;
+				iter_pos.x += C_WORLD_SIZE_X;
 			}
-			else if (iter_pos.x > 505)
+			else if (iter_pos.x > C_WORLD_SIZE_X + C_TOLERANCE)
 			{
-				iter_pos.x = -5;
+				iter_pos.x -= -C_WORLD_SIZE_Y;
 			}
 			(*iter)->set_position(iter_pos);
 		}

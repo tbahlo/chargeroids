@@ -7,6 +7,7 @@
 
 #include "DrawableObject.h"
 #include <SDL2/SDL.h>
+#include <stdlib.h>
 
 DrawableObject::DrawableObject(
 				Vector2D given_position,
@@ -56,8 +57,8 @@ DrawableObject::DrawableObject(SDL_Renderer* given_renderer)
 		character_class = 'D';
 		mass = 100;
 		charge = 0;
-		position.x = 100.;
-		position.y = 100.;
+		position.x = rand() % 100;
+		position.y = rand() % 100;
 		velocity.x = 0.;
 		velocity.y = 0.;
 		force.x = 0;

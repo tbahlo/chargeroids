@@ -34,6 +34,7 @@ Chargeroid::Chargeroid(Vector2D pos, Vector2D vel, SDL_Renderer* renderer)
 }
 
 Chargeroid::~Chargeroid()
+
 {
 	// TODO Auto-generated destructor stub
 }
@@ -77,29 +78,30 @@ void Chargeroid::draw_myself()
 		SDL_SetRenderDrawColor(renderer, 0xFF, int(0xFF * charge/5), int(0xFF * charge/5), 0xFF);
 
 		// draw "star" shape
-		double radius = sqrt(mass);
+		double radius = 2* sqrt(mass);
 		double old_angle = 0;
-		for (double angle = 0; angle <= 360; angle += 360/10)
+		const double pi = 3.14159;
+		for (double angle = 0; angle <= 360; angle += 360/20)
 		{
 				SDL_RenderDrawLine(renderer, 
 								position.x, 
 								position.y,
-								position.x + radius * cos(angle / 360. * 2 * 3.14159),
-								position.y + radius * sin(angle / 360. * 2 * 3.14159));
+								position.x + radius * cos(angle / 360. * 2 * pi),
+								position.y + radius * sin(angle / 360. * 2 * pi));
 				SDL_RenderDrawLine(renderer, 
-								position.x + radius * cos(angle / 360. * 2 * 3.14159),
-								position.y + radius * sin(angle / 360. * 2 * 3.14159),
-								position.x + radius * cos(old_angle / 360. * 2 * 3.14159),
-								position.y + radius * sin(old_angle / 360. * 2 * 3.14159));
+								position.x + radius * cos(angle / 360. * 2 * pi),
+								position.y + radius * sin(angle / 360. * 2 * pi),
+								position.x + radius * cos(old_angle / 360. * 2 * pi),
+								position.y + radius * sin(old_angle / 360. * 2 * pi));
 				old_angle = angle;
 		}
 
 		// draw velocity vector
-		//SDL_RenderDrawLine(renderer, 
-		//				position.x, 
-		//				position.y,
-		//				position.x + velocity.x, 
-		//				position.y + velocity.y);
+		SDL_RenderDrawLine(renderer, 
+						position.x, 
+						position.y,
+						position.x + velocity.x, 
+						position.y + velocity.y);
 
 
 }

@@ -26,6 +26,10 @@ chargeroids: main.o Game.o DrawableObject.o Chargeroid.o Player.o Projectile.o V
 clean:
 	rm -f *.o
 	rm -f chargeroids
- 
+
+# build and run the game 
 run: chargeroids
 	./chargeroids
+
+check: chargeroids
+	cppcheck --enable=all --language=c++ *.cpp *.h
