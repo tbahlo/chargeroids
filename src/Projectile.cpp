@@ -7,34 +7,35 @@
 
 #include "Projectile.h"
 #define CHARGE 0
-#define MAX_AGE 1
+#define MAX_AGE_IN_S 1
+#define PROJECTILE_MASS 50
 
 
 Projectile::Projectile(SDL_Renderer* renderer)
 : DrawableObject(renderer)
 {
 	character_class = 'P';
-	mass = rand()%90 + 10;
+	mass = PROJECTILE_MASS;
 	charge = CHARGE;
-	lifetime_left = MAX_AGE;
+	lifetime_left = MAX_AGE_IN_S;
 }
 
 Projectile::Projectile(Vector2D pos, SDL_Renderer* renderer)
 : DrawableObject(pos, renderer)
 {
-	mass = rand()%90 + 10;
+	mass = PROJECTILE_MASS;
 	character_class = 'C';
 	charge = CHARGE;
-	lifetime_left = MAX_AGE;
+	lifetime_left = MAX_AGE_IN_S;
 }
 
 Projectile::Projectile(Vector2D pos, Vector2D vel, SDL_Renderer* renderer)
 : DrawableObject(pos, vel, renderer)
 {
 	character_class = 'C';
-	mass = rand()%90 + 10;
+	mass = PROJECTILE_MASS;
 	charge = CHARGE;
-	lifetime_left = MAX_AGE;
+	lifetime_left = MAX_AGE_IN_S;
 }
 
 Projectile::~Projectile()
@@ -64,18 +65,34 @@ void Projectile::update(float time_passed){
 }
 void Projectile::draw_myself()
 {
-		SDL_SetRenderDrawColor(renderer, 0xFF, int(0xFF * charge/5), int(0xFF * charge/5), 0xFF);
+		SDL_SetRenderDrawColor(renderer, 0x99, 0x99, 0xFF, 0xFF);
 
 		// draw "star" shape
 		double radius = sqrt(mass);
+		double old_angle = 0;
 		for (double angle = 0; angle <= 360; angle += 360/10)
 		{
-				SDL_RenderDrawLine(renderer, 
-								position.x, 
+				SDL_RenderDrawLine(renderer,
+								position.x,
 								position.y,
 								position.x + radius * cos(angle / 360. * 2 * 3.14159),
 								position.y + radius * sin(angle / 360. * 2 * 3.14159));
+
+				SDL_RenderDrawLine(renderer,
+								position.x,
+								position.y,
+								position.x + radius * cos(angle / 360. * 2 * 3.14159),
+								position.y + radius * sin(angle / 360. * 2 * 3.14159));
+				SDL_RenderDrawLine(renderer,
+								position.x + radius * cos(angle / 360. * 2 * 3.14159),
+								position.y + radius * sin(angle / 360. * 2 * 3.14159),
+								position.x + radius * cos(old_angle / 360. * 2 * 3.14159),
+								position.y + radius * sin(old_angle / 360. * 2 * 3.14159));
+				old_angle = angle;
 		}
+
+
+		SDL_SetRenderDrawColor(renderer, 0x0, 0xFF, 0x0, 0x0);
 
 		// draw velocity vector
 		//SDL_RenderDrawLine(renderer, 
@@ -83,8 +100,6 @@ void Projectile::draw_myself()
 		//				position.y,
 		//				position.x + velocity.x, 
 		//				position.y + velocity.y);
-
-
 }
 
 void Projectile::apply_force(Vector2D ext_force)

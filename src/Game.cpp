@@ -71,17 +71,18 @@ int Game::start(){
 					last_time_in_s = current_time_in_s;
 					if ((current_time_in_s - last_dbg_msg_time_in_s) > dbg_msg_delay)
 					{
-						printf("[%.2f] FPS: %f \nDrawable_objects list: \n", 1./time_passed, current_time_in_s);
+						printf("[%.2f] FPS: %f \nDrawable_objects list: \n", current_time_in_s, 1./time_passed);
 						for (list<DrawableObject*>::iterator current_object = drawable_objects.begin();
 								current_object != drawable_objects.end();
 								current_object++)
 						{
-							printf("%c[ m= %2.1f | q= %2.1f | pos= (%3.1f;%3.1f) ]\n",
+							printf("%c[ m= %02.1f | q= %02.1f | pos= (%03.1f;%03.1f) ] [%d]\n",
 									(*current_object)->character_class,
 									(*current_object)->get_mass(),
 									(*current_object)->get_charge(),
 									(*current_object)->get_pos().x,
-									(*current_object)->get_pos().y);
+									(*current_object)->get_pos().y,
+									(int)(*current_object)->is_dead());
 						};
 						last_dbg_msg_time_in_s = current_time_in_s;
 						printf("\n");
@@ -314,16 +315,20 @@ void Game::let_all_objects_interact()
 
 			// Collision detection - kill both if they collide:
 			//if (distance <= (*interacting_object)->get_mass() + (*partner_object)->get_mass()) {
-			if (distance <= 20) {
-				(*interacting_object)->kill();
-				(*partner_object)->kill();
+			if (((*interacting_object)->character_class == 'p') || ((*partner_object)->character_class == 'p'))
+			{
+				// do nothing - particles do not interact
+			}
+			else
+			{
+				if (distance <= 20) {
+					(*interacting_object)->kill();
+					(*partner_object)->kill();
+				}
 			}
 
 		}
 	}
-
-
-
 }
 
 void Game::spawn_new_objects()
@@ -347,6 +352,13 @@ void Game::remove_dead_objects()
 	{
 		if ((*current_object)->is_dead())
 		{
+			printf("this object is dead: \n");
+			printf("%c[ m= %2.1f | q= %2.1f | pos= (%3.1f;%3.1f) ]\n",
+									(*current_object)->character_class,
+									(*current_object)->get_mass(),
+									(*current_object)->get_charge(),
+									(*current_object)->get_pos().x,
+									(*current_object)->get_pos().y);
 			//DrawableObject* object_to_kill = *current_object;
 			current_object = drawable_objects.erase(current_object);
 			current_object--;
@@ -384,7 +396,7 @@ void Game::check_for_border_crossings()
 			{
 				iter_pos.y += C_WORLD_SIZE_Y;
 			}
-			else if (iter_pos.y > C_WORLD_SIZE_X + C_TOLERANCE)
+			else if (iter_pos.y > C_WORLD_SIZE_Y + C_TOLERANCE)
 			{
 				iter_pos.y -= C_WORLD_SIZE_Y;
 			}
@@ -395,7 +407,7 @@ void Game::check_for_border_crossings()
 			}
 			else if (iter_pos.x > C_WORLD_SIZE_X + C_TOLERANCE)
 			{
-				iter_pos.x -= -C_WORLD_SIZE_Y;
+				iter_pos.x -= C_WORLD_SIZE_X;
 			}
 			(*iter)->set_position(iter_pos);
 		}
