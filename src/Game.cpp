@@ -359,10 +359,36 @@ void Game::remove_dead_objects()
 									(*current_object)->get_charge(),
 									(*current_object)->get_pos().x,
 									(*current_object)->get_pos().y);
-			//DrawableObject* object_to_kill = *current_object;
+
+			Vector2D explosion_pos = (*current_object)->get_pos();
+			Vector2D explosion_velocity = (*current_object)->get_velocity();
+
+			// create explosion particle effects:
+			if ((*current_object)->character_class != 'p')
+			{
+				double radius = 3;
+				double fragment_speed = 600;
+				double emission_angle_spread = 30;
+
+				int amount_of_fragments = 20;
+				for (int fragment_iter = 0; fragment_iter <= amount_of_fragments; ++fragment_iter)
+				{
+					double emission_angle = (((double) fragment_iter) / ((double) amount_of_fragments)) * 360.;
+					emission_angle += ((rand() % (int)(emission_angle_spread + 1)) - (emission_angle_spread / 2 + 1));
+
+					Vector2D proj_speed;
+					proj_speed.x = explosion_velocity.x - (fragment_speed * (1 + ((double)(rand() % 50))/100.)) * cos(emission_angle /360. * 2 * 3.14159);
+					proj_speed.y = explosion_velocity.y - (fragment_speed * (1 + ((double)(rand() % 50))/100.)) * sin(emission_angle /360. * 2 * 3.14159);
+
+					Particle* new_particle = new Particle(explosion_pos, proj_speed, renderer);
+					drawable_objects.push_back(new_particle);
+				}
+
+			}
+
 			current_object = drawable_objects.erase(current_object);
 			current_object--;
-			//delete object_to_kill;
+
 		}
 	}
 }

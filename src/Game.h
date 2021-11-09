@@ -13,6 +13,7 @@
 #include "DrawableObject.h"
 #include "Chargeroid.h"
 #include "Player.h"
+#include "Particle.h"
 #include "Vector2D.h"
 
 using namespace std;
