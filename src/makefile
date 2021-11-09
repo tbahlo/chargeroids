@@ -31,5 +31,6 @@ clean:
 run: chargeroids
 	./chargeroids
 
-check: chargeroids
-	cppcheck --enable=all --language=c++ *.cpp *.h
+check:
+	cppcheck --enable=all --language=c++ *.cpp *.h 2> cppcheck.txt
+	cat cppcheck.txt

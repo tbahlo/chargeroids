@@ -55,39 +55,37 @@ int Game::start(){
 
 
 		// MAIN GAME LOOP
-		float time_passed = 0.;
 		float last_time_in_s = get_current_time_in_s();
-		float current_time_in_s = get_current_time_in_s();
 		float last_dbg_msg_time_in_s = get_current_time_in_s();
 		float dbg_msg_delay = 1;
 		while (is_Running){
-				current_time_in_s = get_current_time_in_s();
-				time_passed = (current_time_in_s - last_time_in_s);
-				if (time_passed > 1./60.) // framerate limit
+			float current_time_in_s = get_current_time_in_s();
+			float time_passed = (current_time_in_s - last_time_in_s);
+			if (time_passed > 1./60.) // framerate limit
+			{
+				handle_input_events();
+				update_game_state(time_passed);
+				render_current_frame();
+				last_time_in_s = current_time_in_s;
+				if ((current_time_in_s - last_dbg_msg_time_in_s) > dbg_msg_delay)
 				{
-					handle_input_events();
-					update_game_state(time_passed);
-					render_current_frame();
-					last_time_in_s = current_time_in_s;
-					if ((current_time_in_s - last_dbg_msg_time_in_s) > dbg_msg_delay)
+					printf("[%.2f] FPS: %f \nDrawable_objects list: \n", current_time_in_s, 1./time_passed);
+					for (list<DrawableObject*>::iterator current_object = drawable_objects.begin();
+							current_object != drawable_objects.end();
+							++current_object)
 					{
-						printf("[%.2f] FPS: %f \nDrawable_objects list: \n", current_time_in_s, 1./time_passed);
-						for (list<DrawableObject*>::iterator current_object = drawable_objects.begin();
-								current_object != drawable_objects.end();
-								current_object++)
-						{
-							printf("%c[ m= %02.1f | q= %02.1f | pos= (%03.1f;%03.1f) ] [%d]\n",
-									(*current_object)->character_class,
-									(*current_object)->get_mass(),
-									(*current_object)->get_charge(),
-									(*current_object)->get_pos().x,
-									(*current_object)->get_pos().y,
-									(int)(*current_object)->is_dead());
-						};
-						last_dbg_msg_time_in_s = current_time_in_s;
-						printf("\n");
-					}
+						printf("%c[ m= %02.1f | q= %02.1f | pos= (%03.1f;%03.1f) ] [%d]\n",
+								(*current_object)->character_class,
+								(*current_object)->get_mass(),
+								(*current_object)->get_charge(),
+								(*current_object)->get_pos().x,
+								(*current_object)->get_pos().y,
+								(int)(*current_object)->is_dead());
+					};
+					last_dbg_msg_time_in_s = current_time_in_s;
+					printf("\n");
 				}
+			}
 		}
 		clean_up();
 
@@ -201,7 +199,7 @@ void Game::handle_input_events(){
 								break;
 							}
 					case SDLK_a:
-						for (int counter = 0; counter < 1; counter++){
+						for (int counter = 0; counter < 1; ++counter){
 								Chargeroid* new_chargeroid;
 								Vector2D chargeroid_pos;
 								chargeroid_pos.x = rand() % C_WORLD_SIZE_X;
@@ -215,7 +213,7 @@ void Game::handle_input_events(){
 						}
 						break;
 					case SDLK_o:
-						for (int counter = 0; counter < 2; counter++){
+						for (int counter = 0; counter < 2; ++counter){
 								DrawableObject* new_object;
 								Vector2D object_position = {250., 250.}; 
 								new_object = new DrawableObject(object_position, renderer);
@@ -235,7 +233,7 @@ void Game::handle_input_events(){
 						//printf("i - printing informations of every object\n");
 						for (list<DrawableObject*>::iterator current_object = drawable_objects.begin();
 								current_object != drawable_objects.end();
-								current_object++)
+								++current_object)
 							{
 								//printf("%c: m=%.0f q=%.2f \n", (*current_object)->character_class, (*current_object)->get_mass(), (*current_object)->get_charge());
 							}
@@ -269,7 +267,7 @@ void Game::let_all_objects_interact()
 	// iterate through all objects:
 	for (list<DrawableObject*>::iterator interacting_object = drawable_objects.begin();
 			interacting_object != drawable_objects.end();
-			interacting_object++)
+			++interacting_object)
 	{
 		// you do not have to interact with yourself and with none of the
 		// elements coming before you because they will already have interacted
@@ -279,10 +277,10 @@ void Game::let_all_objects_interact()
 		// it is necessary because "interacting_object++" actually increments
 		// the iterator
 		list<DrawableObject*>::iterator dummy_iterator = interacting_object;
-		dummy_iterator++;
+		++dummy_iterator;
 		for (list<DrawableObject*>::iterator partner_object = dummy_iterator;
 				partner_object != drawable_objects.end();
-				partner_object++)
+				++partner_object)
 		{
 			// get parameters
 			Vector2D obj1_pos = (*interacting_object)->get_pos();
@@ -335,7 +333,7 @@ void Game::spawn_new_objects()
 {
 	for(list<DrawableObject*>::iterator current_object = drawable_objects.begin();
 			current_object != drawable_objects.end();
-			current_object++)
+			++current_object)
 		{
 			while ((*current_object)->has_child())
 				{
@@ -348,7 +346,7 @@ void Game::remove_dead_objects()
 {
 	for (list<DrawableObject*>::iterator current_object = drawable_objects.begin();
 			current_object != drawable_objects.end();
-			current_object++)
+			++current_object)
 	{
 		if ((*current_object)->is_dead())
 		{
@@ -366,7 +364,6 @@ void Game::remove_dead_objects()
 			// create explosion particle effects:
 			if ((*current_object)->character_class != 'p')
 			{
-				double radius = 3;
 				double fragment_speed = 600;
 				double emission_angle_spread = 30;
 
@@ -387,7 +384,7 @@ void Game::remove_dead_objects()
 			}
 
 			current_object = drawable_objects.erase(current_object);
-			current_object--;
+			--current_object;
 
 		}
 	}
@@ -396,14 +393,14 @@ void Game::remove_dead_objects()
 void Game::update_positions(float time_passed) {
 	for (list<DrawableObject*>::iterator iter = drawable_objects.begin();
 			iter != drawable_objects.end();
-			iter++)
+			++iter)
 	{
 		(*iter)->update(time_passed);
 	}
 }
 
 void Game::apply_friction() {
-	for (list<DrawableObject*>::iterator iter = drawable_objects.begin(); iter != drawable_objects.end(); iter++)
+	for (list<DrawableObject*>::iterator iter = drawable_objects.begin(); iter != drawable_objects.end(); ++iter)
 	{
 			Vector2D speed = (*iter)->get_velocity();
 			speed.x *= (100. - C_FRICTION_LOSS_IN_PERC) / 100.;
@@ -414,7 +411,7 @@ void Game::apply_friction() {
 
 void Game::check_for_border_crossings()
 {
-	for (list<DrawableObject*>::iterator iter = drawable_objects.begin(); iter != drawable_objects.end(); iter++)
+	for (list<DrawableObject*>::iterator iter = drawable_objects.begin(); iter != drawable_objects.end(); ++iter)
 		{
 			Vector2D iter_pos = (*iter)->get_pos();
 				
@@ -446,7 +443,7 @@ void Game::render_current_frame(){
 	SDL_RenderClear(renderer);
 
 	// draw all drawable objects:
-	for (list<DrawableObject*>::iterator iter = drawable_objects.begin(); iter != drawable_objects.end(); iter++)
+	for (list<DrawableObject*>::iterator iter = drawable_objects.begin(); iter != drawable_objects.end(); ++iter)
 	{
 		(*iter)->draw_myself();
 	}
@@ -460,12 +457,12 @@ void Game::clean_up(){
 	// using the q button. I assume somethings wrong here.
 
 	// remove all drawable objects
-	for (list<DrawableObject*>::iterator current_object = drawable_objects.begin(); current_object != drawable_objects.end(); current_object++)
+	for (list<DrawableObject*>::iterator current_object = drawable_objects.begin(); current_object != drawable_objects.end(); ++current_object)
 	{
 		if(drawable_objects.size() > 0)
 			{
 			current_object = drawable_objects.erase(current_object);
-			current_object--;
+			--current_object;
 			}
 
 	}
