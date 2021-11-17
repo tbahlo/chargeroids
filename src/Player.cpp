@@ -17,7 +17,7 @@
 Player::Player(SDL_Renderer* renderer)
 		: DrawableObject(renderer)
 {
-		character_class = 'P';
+		character_class = 'Y';
 		mass = MASS;
 		charge = 1;
 		acceleration = ACCEL;
@@ -31,7 +31,7 @@ Player::Player(Vector2D pos, SDL_Renderer* renderer)
 		: DrawableObject(pos, renderer)
 {
 		mass = MASS;
-		character_class = 'P';
+		character_class = 'Y';
 		charge = 1;
 		acceleration = ACCEL;
 		rotation_speed = ROT_SPEED;
@@ -43,7 +43,7 @@ Player::Player(Vector2D pos, SDL_Renderer* renderer)
 Player::Player(Vector2D pos, Vector2D vel, SDL_Renderer* renderer)
 		: DrawableObject(pos, vel, renderer)
 {
-		character_class = 'P';
+		character_class = 'Y';
 		mass = MASS;
 		charge = 1;
 		acceleration = ACCEL;

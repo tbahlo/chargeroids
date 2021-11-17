@@ -41,23 +41,32 @@ Chargeroid::~Chargeroid()
 
 void Chargeroid::kill()
 {
-	if (mass > 25)
+	if (mass > 25) // only Chargeroids that are "big enough" shall spawn fragments
 	{
-		double mass_difference = rand() % int(mass / 4);
+		double mass_difference = rand() % int(mass / 4); // fragments shall not split evenly but with a mass variation of 25%
 		double first_fragments_mass =  mass / 2 + mass_difference;
 		double second_fragments_mass = mass / 2 - mass_difference;
 		
+		// calculate random positionin which fragments are emitted:
+		double fragment_emission_angle_in_deg = rand() % 360;
+		double velocity_gain = 200; 
+
 		Vector2D first_position;
-		first_position.x = position.x + 2 * sqrt(first_fragments_mass);
-		first_position.y = position.y + 2 * sqrt(first_fragments_mass);
+		first_position.x = position.x + 4 * sqrt(first_fragments_mass) * cos(fragment_emission_angle_in_deg / 360. * 3.14159);
+		first_position.y = position.y + 4 * sqrt(first_fragments_mass) * sin(fragment_emission_angle_in_deg / 360. * 3.14159);
 
 		Vector2D second_position;
-		second_position.x = position.x - 2 *  sqrt(second_fragments_mass);
-		second_position.y = position.y - 2 *  sqrt(second_fragments_mass);
+		second_position.x = position.x - 4 * cos(fragment_emission_angle_in_deg / 360. * 3.14159);
+		second_position.y = position.y - 4 * sin(fragment_emission_angle_in_deg / 360. * 3.14159);
 
-		//TODO implement momentum conservation 
-		Vector2D first_speed = velocity;
+		//TODO implement momentum conservation correctly 
+		Vector2D first_speed =  velocity;
+		first_speed.x += velocity_gain * cos(fragment_emission_angle_in_deg / 360. * 3.14159);
+		first_speed.y += velocity_gain * sin(fragment_emission_angle_in_deg / 360. * 3.14159);
+
 		Vector2D second_speed = velocity;
+		second_speed.x -= velocity_gain * cos(fragment_emission_angle_in_deg / 360. * 3.14159);
+		second_speed.y -= velocity_gain * sin(fragment_emission_angle_in_deg / 360. * 3.14159);
 
 		Chargeroid* first_fragment = new Chargeroid(first_position, first_speed, renderer);
 		first_fragment->mass = first_fragments_mass;
@@ -96,7 +105,7 @@ void Chargeroid::draw_myself()
 				old_angle = angle;
 		}
 
-		// draw velocity vector
+		// draw velocity vector for debugging purposes
 		SDL_RenderDrawLine(renderer, 
 						position.x, 
 						position.y,

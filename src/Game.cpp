@@ -319,6 +319,10 @@ void Game::let_all_objects_interact()
 			}
 			else
 			{
+				double radius_interacting_object = sqrt((*interacting_object)->get_mass());
+				double radius_partner_object = sqrt((*partner_object)->get_mass());
+
+				double combined_radius = radius_interacting_object + radius_partner_object; 
 				if (distance <= 20) {
 					(*interacting_object)->kill();
 					(*partner_object)->kill();
@@ -362,7 +366,8 @@ void Game::remove_dead_objects()
 			Vector2D explosion_velocity = (*current_object)->get_velocity();
 
 			// create explosion particle effects:
-			if ((*current_object)->character_class != 'p')
+			// Projectiles (p) and Particles (P) shall not create particle effects
+			if ((*current_object)->character_class != 'p' && (*current_object)->character_class != 'P')
 			{
 				double fragment_speed = 600;
 				double emission_angle_spread = 30;

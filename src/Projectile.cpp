@@ -24,7 +24,7 @@ Projectile::Projectile(Vector2D pos, SDL_Renderer* renderer)
 : DrawableObject(pos, renderer)
 {
 	mass = PROJECTILE_MASS;
-	character_class = 'C';
+	character_class = 'P';
 	charge = CHARGE;
 	lifetime_left = MAX_AGE_IN_S;
 }
@@ -32,7 +32,7 @@ Projectile::Projectile(Vector2D pos, SDL_Renderer* renderer)
 Projectile::Projectile(Vector2D pos, Vector2D vel, SDL_Renderer* renderer)
 : DrawableObject(pos, vel, renderer)
 {
-	character_class = 'C';
+	character_class = 'P';
 	mass = PROJECTILE_MASS;
 	charge = CHARGE;
 	lifetime_left = MAX_AGE_IN_S;
@@ -68,7 +68,7 @@ void Projectile::draw_myself()
 		SDL_SetRenderDrawColor(renderer, 0x99, 0x99, 0xFF, 0xFF);
 
 		// draw "star" shape
-		double radius = sqrt(mass);
+		double radius = 0.5 * sqrt(mass);
 		double old_angle = 0;
 		for (double angle = 0; angle <= 360; angle += 360/10)
 		{
