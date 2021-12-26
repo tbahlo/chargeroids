@@ -34,6 +34,7 @@ public:
 	double acceleration;
 	double rotation_speed;
 	double orientation_angle;
+	double shot_cooldown;
 };
 
 #endif /* SRC_PLAYER_H_ */

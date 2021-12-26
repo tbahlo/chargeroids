@@ -8,6 +8,7 @@
 #define ROT_SPEED 360		// degree per second
 #define ACCEL 500 			// pixel per second
 #define MASS 100
+#define SHOT_COOLDOWN 150	// in ms
 
 
 #include "Player.h"
@@ -25,6 +26,7 @@ Player::Player(SDL_Renderer* renderer)
 		orientation_angle = 45;
 		is_boosting = false;
 		rotation_direction = 0;
+		shot_cooldown = 0;
 }
 
 Player::Player(Vector2D pos, SDL_Renderer* renderer)
@@ -38,6 +40,7 @@ Player::Player(Vector2D pos, SDL_Renderer* renderer)
 		orientation_angle = 45;
 		is_boosting = false;
 		rotation_direction = 0;
+		shot_cooldown = 0;
 }
 
 Player::Player(Vector2D pos, Vector2D vel, SDL_Renderer* renderer)
@@ -51,6 +54,7 @@ Player::Player(Vector2D pos, Vector2D vel, SDL_Renderer* renderer)
 		orientation_angle = 45;
 		is_boosting = false;
 		rotation_direction = 0;
+		shot_cooldown = 0;
 }
 
 Player::~Player()
@@ -79,19 +83,22 @@ void Player::stop()
 }
 
 void Player::shoot(){
-		
-		double radius = sqrt(mass);
-		double projectile_speed = 1000;
-		Vector2D proj_pos;
-		proj_pos.x = position.x + radius * cos(orientation_angle /360. * 2 * 3.14159);
-		proj_pos.y = position.y + radius * sin(orientation_angle /360. * 2 * 3.14159);
+		if (shot_cooldown <= 0)
+		{
+			double radius = sqrt(mass);
+			double projectile_speed = 1000;
+			Vector2D proj_pos;
+			proj_pos.x = position.x + radius * cos(orientation_angle /360. * 2 * 3.14159);
+			proj_pos.y = position.y + radius * sin(orientation_angle /360. * 2 * 3.14159);
 
-		Vector2D proj_speed;
-		proj_speed.x = velocity.x + projectile_speed * cos(orientation_angle /360. * 2 * 3.14159);
-		proj_speed.y = velocity.y + projectile_speed * sin(orientation_angle /360. * 2 * 3.14159);
+			Vector2D proj_speed;
+			proj_speed.x = velocity.x + projectile_speed * cos(orientation_angle /360. * 2 * 3.14159);
+			proj_speed.y = velocity.y + projectile_speed * sin(orientation_angle /360. * 2 * 3.14159);
 
-		Projectile* new_projectile = new Projectile(proj_pos, proj_speed, renderer);
-		children_objects.push_back(new_projectile);
+			Projectile* new_projectile = new Projectile(proj_pos, proj_speed, renderer);
+			children_objects.push_back(new_projectile);
+			shot_cooldown = SHOT_COOLDOWN;
+		}	
 }
 
 void Player::update(float time_passed)
@@ -102,6 +109,13 @@ void Player::update(float time_passed)
 		//position update:
 		position.x += velocity.x * time_passed;
 		position.y += velocity.y * time_passed;
+
+		// update shot cooldown
+		shot_cooldown -= (time_passed * 1000.);
+		if (shot_cooldown < 0)
+		{
+			shot_cooldown = 0;
+		}
 
 		// acceleration:
 		if(is_boosting)
@@ -174,27 +188,28 @@ void Player::draw_myself()
 		//				position.y,
 		//				position.x + velocity.x,
 		//				position.y + velocity.y);
-		SDL_Rect my_body;
-		my_body.x = position.x - radius;
-		my_body.y = position.y - radius;
-		my_body.w = 2;
-		my_body.h = 2;
+		
+		//SDL_Rect my_body;
+		//my_body.x = position.x - radius;
+		//my_body.y = position.y - radius;
+		//my_body.w = 2;
+		//my_body.h = 2;
 
 		// draw center mark
-		SDL_SetRenderDrawColor(renderer,
-			(int) (0xAA),
-			(int) (0xAA),
-			(int) (0xAA),
-			0xFF); //eb8934
-		SDL_RenderFillRect(renderer, &my_body);
+		//SDL_SetRenderDrawColor(renderer,
+		//	(int) (0xAA),
+		//	(int) (0xAA),
+		//	(int) (0xAA),
+		//	0xFF); //eb8934
+		//SDL_RenderFillRect(renderer, &my_body);
 
-		// draw bounding box
-		my_body.w = 2 * radius;
-		my_body.h = 2 * radius;
-		SDL_RenderDrawRect(renderer, &my_body);
+		//// draw bounding box
+		//my_body.w = 2 * radius;
+		//my_body.h = 2 * radius;
+		//SDL_RenderDrawRect(renderer, &my_body);
 
-		// draw marking line to origin
-		SDL_RenderDrawLine(renderer, position.x, position.y, 0, 0);
+		//// draw marking line to origin
+		//SDL_RenderDrawLine(renderer, position.x, position.y, 0, 0);
 
 }
 

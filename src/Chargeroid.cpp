@@ -6,7 +6,7 @@
  */
 
 #include "Chargeroid.h"
-#define CHARGE 10
+#define CHARGE 100
 
 
 Chargeroid::Chargeroid(SDL_Renderer* renderer)
@@ -106,13 +106,11 @@ void Chargeroid::draw_myself()
 		}
 
 		// draw velocity vector for debugging purposes
-		SDL_RenderDrawLine(renderer, 
-						position.x, 
-						position.y,
-						position.x + velocity.x, 
-						position.y + velocity.y);
-
-
+		//SDL_RenderDrawLine(renderer, 
+		//				position.x, 
+		//				position.y,
+		//				position.x + velocity.x, 
+		//				position.y + velocity.y);
 }
 
 void Chargeroid::apply_force(Vector2D ext_force)

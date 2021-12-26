@@ -10,6 +10,7 @@
 #include <SDL2/SDL.h>
 #include <list>
 #include <ctime>
+#include <stdint.h>
 #include "DrawableObject.h"
 #include "Chargeroid.h"
 #include "Player.h"
@@ -53,7 +54,8 @@ class Game {
 				void check_for_border_crossings();
 
 				void render_current_frame();
-
+				uint32_t get_amount_of_alive_chargeroids();
+				void initialize_level(uint32_t level);
 				void clean_up();
 
 

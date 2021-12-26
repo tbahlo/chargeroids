@@ -8,7 +8,6 @@
 #define C_TOLERANCE 5
 #define C_FRICTION_LOSS_IN_PERC 0.1
 
-
 Game::Game() {
 	is_Running = true;
 	game_window = NULL;
@@ -46,18 +45,20 @@ int Game::start(){
 		//first_test_object = new DrawableObject(renderer);
 		//drawable_objects.push_back(first_test_object);
 
-		printf("Creating a chargeroid...\n");
-		Chargeroid* chargeroid_test_object = new Chargeroid(renderer);
-		drawable_objects.push_back(chargeroid_test_object);
-		printf("Creating a second chargeroid...\n");
-		Chargeroid* chargeroid_test_object2 = new Chargeroid(renderer);
-		drawable_objects.push_back(chargeroid_test_object2);
+		//printf("Creating a chargeroid...\n");
+		//Chargeroid* chargeroid_test_object = new Chargeroid(renderer);
+		//drawable_objects.push_back(chargeroid_test_object);
+		//printf("Creating a second chargeroid...\n");
+		//Chargeroid* chargeroid_test_object2 = new Chargeroid(renderer);
+		//drawable_objects.push_back(chargeroid_test_object2);
 
 
 		// MAIN GAME LOOP
 		float last_time_in_s = get_current_time_in_s();
 		float last_dbg_msg_time_in_s = get_current_time_in_s();
 		float dbg_msg_delay = 1;
+
+		int current_level = 0;
 		while (is_Running){
 			float current_time_in_s = get_current_time_in_s();
 			float time_passed = (current_time_in_s - last_time_in_s);
@@ -84,6 +85,12 @@ int Game::start(){
 					};
 					last_dbg_msg_time_in_s = current_time_in_s;
 					printf("\n");
+					printf("Shot cooldown: %f\n", player->shot_cooldown);
+				}
+				if (get_amount_of_alive_chargeroids() <= 0)
+				{
+					current_level += 1;
+					initialize_level(current_level);
 				}
 			}
 		}
@@ -164,7 +171,7 @@ void Game::handle_input_events(){
 				}
 		}
 		// User presses a key
-		else if (input_event.type == SDL_KEYDOWN){
+		else if ((input_event.type == SDL_KEYDOWN) || (input_event.type == SDL_PRESSED)) {
 				//printf("Key pressed: ");
 
 				// check which key	 was pressed:
@@ -455,6 +462,30 @@ void Game::render_current_frame(){
 
 	//finally render the image!
 	SDL_RenderPresent(renderer);
+}
+
+uint32_t Game::get_amount_of_alive_chargeroids()
+{
+	uint32_t amount = 0;
+	for (list<DrawableObject*>::iterator current_object = drawable_objects.begin();
+							current_object != drawable_objects.end();
+							++current_object)
+	{
+		if ((*current_object)->character_class == 'C')
+		{
+			amount += 1;
+		}
+	};
+	return amount;
+}
+
+void Game::initialize_level(uint32_t level)
+{
+	for (uint32_t iter = 0; iter <= level; iter++)
+	{
+		Chargeroid* chargeroid_test_object = new Chargeroid(renderer);
+		drawable_objects.push_back(chargeroid_test_object);
+	}
 }
 
 void Game::clean_up(){
